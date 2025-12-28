@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:moonpatrol/features/camera/zoomable_camera_preview.dart';
 import '../models/sensor_data.dart';
 import '../services/camera_service.dart';
 import '../services/sensor_service.dart';
@@ -164,7 +165,8 @@ class _CameraScreenState extends State<CameraScreen> {
         fit: StackFit.expand,
         children: [
           // Prévisualisation caméra
-          CameraPreview(_cameraService.controller!),
+          // CameraPreview(_cameraService.controller!),
+          ZoomableCameraPreview(controller: _cameraService.controller!),
 
           // Overlay avec les données des capteurs
           SensorOverlayWidget(
