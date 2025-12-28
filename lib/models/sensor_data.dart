@@ -68,12 +68,12 @@ $deviceInfo
 ''';
   }
 
-  /// Obtenir une description courte pour les métadonnées EXIF
+  /// Obtenir une description courte pour les métadonnées EXIF (sans accents)
   String toExifComment() {
     return '''
-Accéléromètre: ${accelerometer != null ? 'X:${accelerometer!.x.toStringAsFixed(2)} Y:${accelerometer!.y.toStringAsFixed(2)} Z:${accelerometer!.z.toStringAsFixed(2)}' : 'N/A'}
+Accelerometre: ${accelerometer != null ? 'X:${accelerometer!.x.toStringAsFixed(2)} Y:${accelerometer!.y.toStringAsFixed(2)} Z:${accelerometer!.z.toStringAsFixed(2)}' : 'N/A'}
 Gyroscope: ${gyroscope != null ? 'X:${gyroscope!.x.toStringAsFixed(2)} Y:${gyroscope!.y.toStringAsFixed(2)} Z:${gyroscope!.z.toStringAsFixed(2)}' : 'N/A'}
-Magnétomètre: ${magnetometer != null ? 'X:${magnetometer!.x.toStringAsFixed(0)} Y:${magnetometer!.y.toStringAsFixed(0)} Z:${magnetometer!.z.toStringAsFixed(0)}' : 'N/A'}
+Magnetometre: ${magnetometer != null ? 'X:${magnetometer!.x.toStringAsFixed(0)} Y:${magnetometer!.y.toStringAsFixed(0)} Z:${magnetometer!.z.toStringAsFixed(0)}' : 'N/A'}
 Batterie: ${batteryLevel ?? 'N/A'}%
 ${deviceInfo ?? ''}''';
   }

@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "/home/ali/StudioProjects/poc/moonpatrol/linux"
+    "cmake.sourceDirectory": "/home/ali/StudioProjects/poc/moonpatrol/linux",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

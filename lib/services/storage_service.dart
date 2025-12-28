@@ -56,11 +56,18 @@ class StorageService {
         });
       }
 
-      // Capteurs dans les commentaires
+      // Capteurs dans les commentaires (sans accents)
+      final sensorInfo = '''
+Accelerometre: ${data.accelerometer != null ? 'X:${data.accelerometer!.x.toStringAsFixed(2)} Y:${data.accelerometer!.y.toStringAsFixed(2)} Z:${data.accelerometer!.z.toStringAsFixed(2)}' : 'N/A'}
+Gyroscope: ${data.gyroscope != null ? 'X:${data.gyroscope!.x.toStringAsFixed(2)} Y:${data.gyroscope!.y.toStringAsFixed(2)} Z:${data.gyroscope!.z.toStringAsFixed(2)}' : 'N/A'}
+Magnetometre: ${data.magnetometer != null ? 'X:${data.magnetometer!.x.toStringAsFixed(0)} Y:${data.magnetometer!.y.toStringAsFixed(0)} Z:${data.magnetometer!.z.toStringAsFixed(0)}' : 'N/A'}
+Batterie: ${data.batteryLevel ?? 'N/A'}%
+${data.deviceInfo ?? ''}''';
+
       await exif.writeAttributes({
-        'UserComment': data.toExifComment(),
-        'ImageDescription': 'Photo avec données capteurs',
-        'Software': 'Camera Sensors Pro',
+        'Sensors data': sensorInfo,
+        'ImageDescription': 'Photo avec donnees capteurs',
+        'Software': 'Moon Patrol',
       });
 
       await exif.close();
