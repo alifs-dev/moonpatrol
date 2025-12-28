@@ -66,12 +66,12 @@ class SensorService {
       final deviceInfo = DeviceInfoPlugin();
       if (Platform.isAndroid) {
         final androidInfo = await deviceInfo.androidInfo;
-        _deviceInfo = '''Modèle: ${androidInfo.model}
+        _deviceInfo = '''Modele: ${androidInfo.model}
   Fabricant: ${androidInfo.manufacturer}
   Android: ${androidInfo.version.release}''';
       } else if (Platform.isIOS) {
         final iosInfo = await deviceInfo.iosInfo;
-        _deviceInfo = '''Modèle: ${iosInfo.model}
+        _deviceInfo = '''Modele: ${iosInfo.model}
   Nom: ${iosInfo.name}
   iOS: ${iosInfo.systemVersion}''';
       }
