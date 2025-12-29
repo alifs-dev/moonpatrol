@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'screens/camera_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final cameras = await availableCameras();
+  // await dotenv.load(fileName: ".env");
+
   runApp(MyApp(cameras: cameras));
 }
 

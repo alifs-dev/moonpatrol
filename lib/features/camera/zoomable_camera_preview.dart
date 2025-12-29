@@ -4,8 +4,14 @@ import 'package:flutter/material.dart';
 class ZoomableCameraPreview extends StatefulWidget {
   final CameraController controller;
   final Widget? child;
+  final ValueChanged<double>? onZoomChanged;
 
-  const ZoomableCameraPreview({super.key, required this.controller, this.child});
+  const ZoomableCameraPreview({
+    super.key,
+    required this.controller,
+    this.child,
+    this.onZoomChanged,
+  });
 
   @override
   State<ZoomableCameraPreview> createState() => _ZoomableCameraPreviewState();
@@ -39,6 +45,8 @@ class _ZoomableCameraPreviewState extends State<ZoomableCameraPreview> {
     if (newZoom != _currentZoom) {
       _currentZoom = newZoom;
       await widget.controller.setZoomLevel(_currentZoom);
+
+      widget.onZoomChanged?.call(_currentZoom);
     }
   }
 

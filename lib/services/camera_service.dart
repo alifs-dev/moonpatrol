@@ -1,12 +1,20 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
+double _currentZoomLevel = 1.0;
+
 /// Service de gestion de la caméra
 class CameraService {
   CameraController? _controller;
 
   CameraController? get controller => _controller;
   bool get isInitialized => _controller?.value.isInitialized ?? false;
+
+  double get currentZoomLevel => _currentZoomLevel;
+
+  void setZoomLevel(double zoom) {
+    _currentZoomLevel = zoom;
+  }
 
   /// Initialiser la caméra
   Future<bool> initialize(List<CameraDescription> cameras) async {

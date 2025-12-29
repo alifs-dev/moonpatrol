@@ -32,6 +32,7 @@ class _CameraScreenState extends State<CameraScreen> {
   bool _isCapturing = false;
   String _status = 'Prêt';
   Position? _currentPosition;
+  double _zoomLevel = 1.0;
 
   @override
   void initState() {
@@ -105,6 +106,7 @@ class _CameraScreenState extends State<CameraScreen> {
         magnetometer: _sensorService.magnetometer,
         batteryLevel: _sensorService.batteryLevel,
         deviceInfo: _sensorService.deviceInfo,
+        zoomLevel: _cameraService.currentZoomLevel,
       );
 
       // Sauvegarder
@@ -112,6 +114,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
       setState(() => _status = 'Photo enregistrée !');
       _showMessage('📸 Photo sauvegardée dans la galerie !', Colors.green);
+      // _showMessage('Data upload!', success ? Colors.green : Colors.red);
     } catch (e) {
       setState(() => _status = 'Erreur: $e');
       _showMessage('❌ Erreur: $e', Colors.red);
@@ -137,7 +140,7 @@ class _CameraScreenState extends State<CameraScreen> {
       SnackBar(
         content: const Text('⚠️ GPS désactivé. Activez-le dans les paramètres.'),
         backgroundColor: Colors.orange,
-        duration: const Duration(seconds: 5),
+        duration: const Duration(seconds: 30),
         action: SnackBarAction(
           label: 'Paramètres',
           textColor: Colors.white,
@@ -166,8 +169,13 @@ class _CameraScreenState extends State<CameraScreen> {
         children: [
           // Prévisualisation caméra
           // CameraPreview(_cameraService.controller!),
-          ZoomableCameraPreview(controller: _cameraService.controller!),
-
+          ZoomableCameraPreview(
+            controller: _cameraService.controller!,
+            onZoomChanged: (zoom) {
+              setState(() => _zoomLevel = zoom);
+              _cameraService.setZoomLevel(zoom);
+            },
+          ),
           // Overlay avec les données des capteurs
           SensorOverlayWidget(
             position: _currentPosition,
@@ -175,6 +183,7 @@ class _CameraScreenState extends State<CameraScreen> {
             gyroscope: _sensorService.gyroscope,
             magnetometer: _sensorService.magnetometer,
             batteryLevel: _sensorService.batteryLevel,
+            zoomLevel: _zoomLevel,
           ),
 
           // Message de statut

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:moonpatrol/services/api_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:native_exif/native_exif.dart';
 import 'package:gal/gal.dart';
@@ -10,6 +11,7 @@ import 'elevation_service.dart';
 /// Service de sauvegarde des photos et données
 class StorageService {
   final ElevationService _elevationService = ElevationService();
+  // final ApiService _apiService = ApiService();
 
   /// Sauvegarder la photo avec les métadonnées dans la galerie
   Future<void> savePhotoWithMetadata(String imagePath, SensorData sensorData) async {
@@ -35,10 +37,12 @@ class StorageService {
       await _writeExifData(photoFile.path, sensorData, elevationApi);
 
       // Sauvegarder dans la galerie avec Gal
-      await Gal.putImage(photoFile.path, album: 'Camera Sensors');
+      await Gal.putImage(photoFile.path, album: 'Moon Patrol');
 
       // Sauvegarder les données dans un fichier texte
       await _saveSensorTextFile(timestamp, sensorData, elevationApi);
+
+      // await _apiService.postForensicJson(sensorData);
 
       debugPrint('📸 Photo sauvegardée dans la galerie');
     } catch (e) {
@@ -97,6 +101,7 @@ class StorageService {
         'moonpatrol': {
           'version': '1.0',
           'timestamp': data.timestamp.toIso8601String(),
+          'zoom': data.zoomLevel,
           'gps':
               data.location != null
                   ? {
