@@ -14,7 +14,7 @@ class ElevationService {
     try {
       final url = Uri.parse('$_baseUrl?locations=$latitude,$longitude');
 
-      DebugLog.info('🌍 Requête altitude API: $url');
+      DebugLog.info('Requête altitude API: $url');
 
       final response = await http.get(url).timeout(const Duration(seconds: 10));
 

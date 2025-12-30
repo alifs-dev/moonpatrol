@@ -114,7 +114,7 @@ class _CameraScreenState extends State<CameraScreen> {
       await _storageService.savePhotoWithMetadata(image.path, sensorData);
 
       setState(() => _status = 'Photo enregistrée !');
-      _showMessage('📸 Photo sauvegardée dans la galerie !', Colors.green);
+      _showMessage('Photo sauvegardée dans la galerie !', Colors.green);
       // _showMessage('Data upload!', success ? Colors.green : Colors.red);
     } catch (e) {
       setState(() => _status = 'Erreur: $e');

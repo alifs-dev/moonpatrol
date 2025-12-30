@@ -56,7 +56,7 @@ class StorageService {
       // Sauvegarder les données dans un fichier texte
       await _saveSensorTextFile(timestamp, sensorData, elevationApi);
 
-      DebugLog.info('📸 Photo sauvegardée dans la galerie');
+      DebugLog.success('Photo sauvegardée dans la galerie');
     } catch (e) {
       DebugLog.error('Erreur sauvegarde: $e');
       rethrow;
@@ -187,12 +187,12 @@ class StorageService {
       DebugLog.info(
         '  📍 GPS: ${data.location?.latitude.toStringAsFixed(6)}, ${data.location?.longitude.toStringAsFixed(6)}',
       );
-      DebugLog.info('  🏔️ Altitude GPS: ${data.location?.altitude.toStringAsFixed(1)}m');
-      DebugLog.info('  🌍 Altitude API: ${elevationApi?.toStringAsFixed(1) ?? "N/A"}m');
-      DebugLog.info('  🧭 Magnetometre: $magnetoData');
-      DebugLog.info('  📐 Accelerometre: $accelData');
-      DebugLog.info('  🔄 Gyroscope: $gyroData');
-      DebugLog.info('  🔋 Batterie: ${data.batteryLevel ?? "N/A"}%');
+      DebugLog.info('Altitude GPS: ${data.location?.altitude.toStringAsFixed(1)}m');
+      DebugLog.info('Altitude API: ${elevationApi?.toStringAsFixed(1) ?? "N/A"}m');
+      DebugLog.info('Magnetometre: $magnetoData');
+      DebugLog.info('Accelerometre: $accelData');
+      DebugLog.info('Gyroscope: $gyroData');
+      DebugLog.info('Batterie: ${data.batteryLevel ?? "N/A"}%');
     } catch (e) {
       DebugLog.error('Erreur écriture EXIF: $e');
     }
@@ -215,7 +215,7 @@ class StorageService {
       }
 
       await sensorFile.writeAsString(textData);
-      DebugLog.info('📊 Fichier texte sauvegardé: ${sensorFile.path}');
+      DebugLog.info('Fichier texte sauvegardé: ${sensorFile.path}');
     } catch (e) {
       DebugLog.error('Erreur sauvegarde texte: $e');
     }

@@ -14,7 +14,7 @@ class ApiService {
     double? elevationApi,
   }) async {
     try {
-      DebugLog.info('📡 Envoi des données à l\'API...');
+      DebugLog.warning('Envoi des données à l\'API...');
 
       // Lire le fichier image
       final imageFile = File(imagePath);
@@ -83,11 +83,11 @@ class ApiService {
       // Envoyer à l'API
       final url = Uri.parse(EnvConfig.apiForensicUrl);
 
-      DebugLog.info('🌐 URL: $url');
+      DebugLog.info('URL: $url');
       DebugLog.info(
         '📦 Taille image: ${(imageBytes.length / 1024).toStringAsFixed(2)} KB',
       );
-      DebugLog.info('📄 Taille JSON: ${jsonEncode(payload).length} caractères');
+      DebugLog.info('Taille JSON: ${jsonEncode(payload).length} caractères');
 
       final response = await http
           .post(
@@ -99,11 +99,11 @@ class ApiService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         DebugLog.info('Données envoyées avec succès');
-        DebugLog.info('📥 Réponse: ${response.body}');
+        DebugLog.info('Réponse: ${response.body}');
         return true;
       } else {
         DebugLog.error('Erreur API: ${response.statusCode}');
-        DebugLog.error('📥 Réponse: ${response.body}');
+        DebugLog.error('Réponse: ${response.body}');
         return false;
       }
     } catch (e) {
@@ -118,7 +118,7 @@ class ApiService {
       final url = Uri.parse(EnvConfig.apiBaseUrl);
       final response = await http.get(url).timeout(const Duration(seconds: 5));
 
-      DebugLog.info('🔌 Test connexion API: ${response.statusCode}');
+      DebugLog.info('Test connexion API: ${response.statusCode}');
       return response.statusCode < 500;
     } catch (e) {
       DebugLog.error('API non accessible: $e');
