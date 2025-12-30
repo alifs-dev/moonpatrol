@@ -10,6 +10,7 @@ class SensorData {
   final MagnetometerEvent? magnetometer;
   final int? batteryLevel;
   final String? deviceInfo;
+  final double zoomLevel;
 
   SensorData({
     required this.timestamp,
@@ -19,6 +20,7 @@ class SensorData {
     this.magnetometer,
     this.batteryLevel,
     this.deviceInfo,
+    required this.zoomLevel,
   });
 
   /// Convertir les données en format texte lisible
@@ -27,7 +29,7 @@ class SensorData {
     return '''
 === DONNÉES CAPTEURS ===
 Horodatage: $timestamp
-
+ZoomLevel: $zoomLevel
 LOCALISATION:
 ${location != null ? '''
   Latitude: ${location!.latitude}

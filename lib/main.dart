@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'screens/camera_screen.dart';
+import 'screens/permission_screen.dart';
+import 'services/dot.env_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Charger la configuration .env
+  await EnvConfig.initialize();
+  EnvConfig.printConfig();
+
+  // Obtenir les caméras disponibles
   final cameras = await availableCameras();
+
   runApp(MyApp(cameras: cameras));
 }
 
@@ -16,10 +24,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Camera Sensors Pro',
+      title: EnvConfig.appName,
       theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
       debugShowCheckedModeBanner: false,
-      home: CameraScreen(cameras: cameras),
+      // Démarrer par l'écran de permissions
+      home: PermissionScreen(cameras: cameras),
     );
   }
 }

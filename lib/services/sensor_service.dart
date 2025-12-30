@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'package:moonpatrol/utils/logger/debug_log.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -56,7 +58,7 @@ class SensorService {
       final battery = Battery();
       _batteryLevel = await battery.batteryLevel;
     } catch (e) {
-      print('Erreur batterie: $e');
+      DebugLog.error('Erreur batterie: $e');
     }
   }
 
@@ -76,7 +78,7 @@ class SensorService {
   iOS: ${iosInfo.systemVersion}''';
       }
     } catch (e) {
-      print('Erreur device info: $e');
+      DebugLog.error('Erreur device info: $e');
     }
   }
 

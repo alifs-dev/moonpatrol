@@ -9,6 +9,7 @@ class SensorOverlayWidget extends StatelessWidget {
   final GyroscopeEvent? gyroscope;
   final MagnetometerEvent? magnetometer;
   final int? batteryLevel;
+  final double? zoomLevel;
 
   const SensorOverlayWidget({
     super.key,
@@ -17,6 +18,7 @@ class SensorOverlayWidget extends StatelessWidget {
     this.gyroscope,
     this.magnetometer,
     this.batteryLevel,
+    this.zoomLevel,
   });
 
   @override
@@ -71,6 +73,7 @@ class SensorOverlayWidget extends StatelessWidget {
                   ? 'X:${magnetometer!.x.toStringAsFixed(0)} Y:${magnetometer!.y.toStringAsFixed(0)} Z:${magnetometer!.z.toStringAsFixed(0)}'
                   : 'N/A',
             ),
+            _buildSensorRow('Zoom.', zoomLevel!.toStringAsFixed(3)),
             _buildSensorRow('Batt.', batteryLevel != null ? '$batteryLevel%' : 'N/A'),
           ],
         ),

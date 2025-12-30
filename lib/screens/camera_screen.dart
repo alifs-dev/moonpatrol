@@ -2,14 +2,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:geolocator/geolocator.dart';
-import '../models/sensor_data.dart';
-import '../services/camera_service.dart';
-import '../services/sensor_service.dart';
-import '../services/location_service.dart';
-import '../services/storage_service.dart';
-import '../services/permission_service.dart';
-import '../widgets/sensor_overlay_widget.dart';
-import '../widgets/camera_button_widget.dart';
+import 'package:moonpatrol/features/camera/zoomable_camera_preview.dart';
+import 'package:moonpatrol/models/sensor_data.dart';
+import 'package:moonpatrol/services/camera_service.dart';
+import 'package:moonpatrol/services/dot.env_service.dart';
+import 'package:moonpatrol/services/sensor_service.dart';
+import 'package:moonpatrol/services/location_service.dart';
+import 'package:moonpatrol/services/storage_service.dart';
+import 'package:moonpatrol/services/permission_service.dart';
+import 'package:moonpatrol/widgets/sensor_overlay_widget.dart';
+import 'package:moonpatrol/widgets/camera_button_widget.dart';
 
 class CameraScreen extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -31,6 +33,7 @@ class _CameraScreenState extends State<CameraScreen> {
   bool _isCapturing = false;
   String _status = 'Prêt';
   Position? _currentPosition;
+  double _zoomLevel = EnvConfig.zoomLevel;
 
   @override
   void initState() {
@@ -104,6 +107,7 @@ class _CameraScreenState extends State<CameraScreen> {
         magnetometer: _sensorService.magnetometer,
         batteryLevel: _sensorService.batteryLevel,
         deviceInfo: _sensorService.deviceInfo,
+        zoomLevel: _cameraService.currentZoomLevel,
       );
 
       // Sauvegarder
@@ -111,6 +115,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
       setState(() => _status = 'Photo enregistrée !');
       _showMessage('📸 Photo sauvegardée dans la galerie !', Colors.green);
+      // _showMessage('Data upload!', success ? Colors.green : Colors.red);
     } catch (e) {
       setState(() => _status = 'Erreur: $e');
       _showMessage('❌ Erreur: $e', Colors.red);
@@ -136,7 +141,7 @@ class _CameraScreenState extends State<CameraScreen> {
       SnackBar(
         content: const Text('⚠️ GPS désactivé. Activez-le dans les paramètres.'),
         backgroundColor: Colors.orange,
-        duration: const Duration(seconds: 5),
+        duration: const Duration(seconds: 30),
         action: SnackBarAction(
           label: 'Paramètres',
           textColor: Colors.white,
@@ -164,8 +169,14 @@ class _CameraScreenState extends State<CameraScreen> {
         fit: StackFit.expand,
         children: [
           // Prévisualisation caméra
-          CameraPreview(_cameraService.controller!),
-
+          // CameraPreview(_cameraService.controller!),
+          ZoomableCameraPreview(
+            controller: _cameraService.controller!,
+            onZoomChanged: (zoom) {
+              setState(() => _zoomLevel = zoom);
+              _cameraService.setZoomLevel(zoom);
+            },
+          ),
           // Overlay avec les données des capteurs
           SensorOverlayWidget(
             position: _currentPosition,
@@ -173,6 +184,7 @@ class _CameraScreenState extends State<CameraScreen> {
             gyroscope: _sensorService.gyroscope,
             magnetometer: _sensorService.magnetometer,
             batteryLevel: _sensorService.batteryLevel,
+            zoomLevel: _zoomLevel,
           ),
 
           // Message de statut
