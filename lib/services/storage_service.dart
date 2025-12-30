@@ -1,17 +1,18 @@
 import 'dart:io';
 import 'dart:convert';
-import 'package:moonpatrol/services/api_service.dart';
+import 'package:moonpatrol/utils/logger/debug_log.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:native_exif/native_exif.dart';
 import 'package:gal/gal.dart';
-import 'package:flutter/material.dart';
-import '../models/sensor_data.dart';
+import 'package:moonpatrol/models/sensor_data.dart';
 import 'elevation_service.dart';
+import 'api_service.dart';
+import 'dot.env_service.dart';
 
 /// Service de sauvegarde des photos et données
 class StorageService {
   final ElevationService _elevationService = ElevationService();
-  // final ApiService _apiService = ApiService();
+  final ApiService _apiService = ApiService();
 
   /// Sauvegarder la photo avec les métadonnées dans la galerie
   Future<void> savePhotoWithMetadata(String imagePath, SensorData sensorData) async {
@@ -36,17 +37,28 @@ class StorageService {
       // Écrire les métadonnées EXIF structurées
       await _writeExifData(photoFile.path, sensorData, elevationApi);
 
+      // Envoyer à l'API forensic
+      final apiSuccess = await _apiService.sendForensicData(
+        imagePath: photoFile.path,
+        sensorData: sensorData,
+        elevationApi: elevationApi,
+      );
+
+      if (apiSuccess) {
+        DebugLog.info('✅ Données envoyées à l\'API avec succès');
+      } else {
+        DebugLog.error('⚠️ Échec envoi API (photo sauvegardée localement)');
+      }
+
       // Sauvegarder dans la galerie avec Gal
-      await Gal.putImage(photoFile.path, album: 'Moon Patrol');
+      await Gal.putImage(photoFile.path, album: EnvConfig.albumName);
 
       // Sauvegarder les données dans un fichier texte
       await _saveSensorTextFile(timestamp, sensorData, elevationApi);
 
-      // await _apiService.postForensicJson(sensorData);
-
-      debugPrint('📸 Photo sauvegardée dans la galerie');
+      DebugLog.info('📸 Photo sauvegardée dans la galerie');
     } catch (e) {
-      debugPrint('❌ Erreur sauvegarde: $e');
+      DebugLog.error('❌ Erreur sauvegarde: $e');
       rethrow;
     }
   }
@@ -79,8 +91,6 @@ class StorageService {
       }
 
       // === TAGS PERSONNALISÉS MOONPATROL ===
-      // Format: "clé:valeur;clé:valeur"
-
       final magnetoData =
           data.magnetometer != null
               ? 'x:${data.magnetometer!.x.toStringAsFixed(2)};y:${data.magnetometer!.y.toStringAsFixed(2)};z:${data.magnetometer!.z.toStringAsFixed(2)}'
@@ -99,7 +109,7 @@ class StorageService {
       // === JSON COMPLET MOONPATROL ===
       final jsonData = {
         'moonpatrol': {
-          'version': '1.0',
+          'version': EnvConfig.appVersion,
           'timestamp': data.timestamp.toIso8601String(),
           'zoom': data.zoomLevel,
           'gps':
@@ -151,12 +161,10 @@ class StorageService {
       final jsonString = jsonEncode(jsonData);
 
       // === ÉCRITURE DANS LES TAGS EXIF ===
-      // Note: native_exif ne supporte que les tags EXIF standards
-      // On utilise donc les tags modifiables avec des noms clairs
       await exif.writeAttributes({
         // Identification
-        'Make': 'MoonPatrol',
-        'Model': 'Camera Sensors Pro',
+        // 'Make': 'MoonPatrol',
+        // 'Model': 'Camera Sensors Pro',
         'Software': 'MoonPatrol v1.0',
         'ImageDescription': 'Photo avec donnees capteurs MoonPatrol',
         'ImageUniqueID': 'moonpatrol_${data.timestamp.millisecondsSinceEpoch}',
@@ -164,25 +172,29 @@ class StorageService {
         // JSON complet dans UserComment (priorité de lecture)
         'UserComment': jsonString,
 
-        'Artist': 'Moon Patrol',
-        'Copyright': 'Moon Patrol',
+        // Tags lisibles individuels (fallback)
+        // 'Artist': 'magnetometre: $magnetoData',
+        // 'Copyright': 'accelerometre: $accelData',
+        // 'XPKeywords': 'gyroscope: $gyroData',
+        // 'XPSubject': 'batterie: ${data.batteryLevel ?? "N/A"}%',
+        // 'XPTitle':
+        //     'elevation_api: ${elevationApi != null ? "${elevationApi.toStringAsFixed(2)}m" : "N/A"}',
       });
 
       await exif.close();
 
-      debugPrint('✅ EXIF MoonPatrol structuré:');
-      debugPrint(
+      DebugLog.info('✅ EXIF MoonPatrol structuré:');
+      DebugLog.info(
         '  📍 GPS: ${data.location?.latitude.toStringAsFixed(6)}, ${data.location?.longitude.toStringAsFixed(6)}',
       );
-      debugPrint('  🏔️ Altitude GPS: ${data.location?.altitude.toStringAsFixed(1)}m');
-      debugPrint('  🌍 Altitude API: ${elevationApi?.toStringAsFixed(1) ?? "N/A"}m');
-      debugPrint('  🧭 Magnetometre: $magnetoData');
-      debugPrint('  📐 Accelerometre: $accelData');
-      debugPrint('  🔄 Gyroscope: $gyroData');
-      debugPrint('  🔋 Batterie: ${data.batteryLevel ?? "N/A"}%');
-      debugPrint('  📄 JSON: ${jsonString.length} caracteres');
+      DebugLog.info('  🏔️ Altitude GPS: ${data.location?.altitude.toStringAsFixed(1)}m');
+      DebugLog.info('  🌍 Altitude API: ${elevationApi?.toStringAsFixed(1) ?? "N/A"}m');
+      DebugLog.info('  🧭 Magnetometre: $magnetoData');
+      DebugLog.info('  📐 Accelerometre: $accelData');
+      DebugLog.info('  🔄 Gyroscope: $gyroData');
+      DebugLog.info('  🔋 Batterie: ${data.batteryLevel ?? "N/A"}%');
     } catch (e) {
-      debugPrint('⚠️ Erreur écriture EXIF: $e');
+      DebugLog.error('⚠️ Erreur écriture EXIF: $e');
     }
   }
 
@@ -196,7 +208,6 @@ class StorageService {
       final documentsDir = await getApplicationDocumentsDirectory();
       final sensorFile = File('${documentsDir.path}/photo_${timestamp}_sensors.txt');
 
-      // Ajouter l'altitude API au texte
       String textData = data.toString();
       if (elevationApi != null) {
         textData +=
@@ -204,9 +215,9 @@ class StorageService {
       }
 
       await sensorFile.writeAsString(textData);
-      debugPrint('📊 Fichier texte sauvegardé: ${sensorFile.path}');
+      DebugLog.info('📊 Fichier texte sauvegardé: ${sensorFile.path}');
     } catch (e) {
-      debugPrint('⚠️ Erreur sauvegarde texte: $e');
+      DebugLog.error('⚠️ Erreur sauvegarde texte: $e');
     }
   }
 

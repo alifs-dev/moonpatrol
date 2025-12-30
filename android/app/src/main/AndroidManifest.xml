@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
     
     <!-- Android 12 et inférieur -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" 
@@ -23,7 +24,7 @@
     <uses-feature android:name="android.hardware.sensor.compass" android:required="false"/>
 
     <application
-        android:label="camera_sensors_app"
+        android:label="MoonPatrol"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true">

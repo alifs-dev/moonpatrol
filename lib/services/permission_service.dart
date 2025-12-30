@@ -45,10 +45,22 @@ class PermissionService {
   /// Vérifier si la permission stockage est accordée
   static Future<bool> isStoragePermissionGranted() async {
     if (Platform.isAndroid) {
-      final status = await Permission.photos.status;
+      final status = await Permission.storage.status;
       return status.isGranted;
     }
     final status = await Permission.photos.status;
+
     return status.isGranted;
   }
+
+  /// Vérifier si la permission stockage est accordée
+  // static Future<bool> isPhotoPermissionGranted() async {
+  //   if (Platform.isAndroid) {
+  //     final status = await Permission.photos.status;
+  //     return status.isGranted;
+  //   }
+  //   final status = await Permission.photos.status;
+
+  //   return status.isGranted;
+  // }
 }

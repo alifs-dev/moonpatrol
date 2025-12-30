@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:moonpatrol/features/camera/zoomable_camera_preview.dart';
-import '../models/sensor_data.dart';
-import '../services/camera_service.dart';
-import '../services/sensor_service.dart';
-import '../services/location_service.dart';
-import '../services/storage_service.dart';
-import '../services/permission_service.dart';
-import '../widgets/sensor_overlay_widget.dart';
-import '../widgets/camera_button_widget.dart';
+import 'package:moonpatrol/models/sensor_data.dart';
+import 'package:moonpatrol/services/camera_service.dart';
+import 'package:moonpatrol/services/dot.env_service.dart';
+import 'package:moonpatrol/services/sensor_service.dart';
+import 'package:moonpatrol/services/location_service.dart';
+import 'package:moonpatrol/services/storage_service.dart';
+import 'package:moonpatrol/services/permission_service.dart';
+import 'package:moonpatrol/widgets/sensor_overlay_widget.dart';
+import 'package:moonpatrol/widgets/camera_button_widget.dart';
 
 class CameraScreen extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -32,7 +33,7 @@ class _CameraScreenState extends State<CameraScreen> {
   bool _isCapturing = false;
   String _status = 'Prêt';
   Position? _currentPosition;
-  double _zoomLevel = 1.0;
+  double _zoomLevel = EnvConfig.zoomLevel;
 
   @override
   void initState() {

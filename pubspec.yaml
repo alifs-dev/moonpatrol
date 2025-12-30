@@ -41,13 +41,21 @@ dependencies:
   battery_plus: ^5.0.2
   device_info_plus: ^9.1.1
   
+  # EXIF pour écrire dans les métadonnées
+  native_exif: ^0.6.2
+  
+  # Sauvegarder dans la galerie
+  gal: ^2.3.2
+  
+  # API HTTP pour altitude et forensic
+  http: ^1.6.0
+  
+  # Configuration .env
+  flutter_dotenv: ^6.0.0
+  
   # Stockage et permissions
   path_provider: ^2.1.1
   permission_handler: ^11.0.1
-  native_exif: ^0.6.2
-  gal: ^2.3.2
-  http: ^1.6.0
-  flutter_dotenv: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -101,3 +109,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  # Inclure le fichier .env
+  assets:
+    - .env

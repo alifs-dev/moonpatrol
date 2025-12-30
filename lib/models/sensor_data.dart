@@ -29,7 +29,7 @@ class SensorData {
     return '''
 === DONNÉES CAPTEURS ===
 Horodatage: $timestamp
-
+ZoomLevel: $zoomLevel
 LOCALISATION:
 ${location != null ? '''
   Latitude: ${location!.latitude}

@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
+import 'package:moonpatrol/utils/logger/debug_log.dart';
+import 'dot.env_service.dart';
 
 /// Service pour récupérer l'altitude via API (sans clé)
 class ElevationService {
   // API gratuite sans clé : Open-Elevation
-  static const String _baseUrl = 'https://api.open-elevation.com/api/v1/lookup';
+  static final String _baseUrl = EnvConfig.elevationApiUrl;
 
   /// Récupérer l'altitude pour des coordonnées GPS
   /// Retourne l'altitude en mètres, ou null en cas d'erreur
@@ -13,7 +14,7 @@ class ElevationService {
     try {
       final url = Uri.parse('$_baseUrl?locations=$latitude,$longitude');
 
-      debugPrint('🌍 Requête altitude API: $url');
+      DebugLog.info('🌍 Requête altitude API: $url');
 
       final response = await http.get(url).timeout(const Duration(seconds: 10));
 
@@ -21,14 +22,14 @@ class ElevationService {
         final data = jsonDecode(response.body);
         final elevation = data['results'][0]['elevation'];
 
-        debugPrint('✅ Altitude API récupérée: ${elevation}m');
+        DebugLog.info('✅ Altitude API récupérée: ${elevation}m');
         return elevation.toDouble();
       } else {
-        debugPrint('⚠️ Erreur API altitude: ${response.statusCode}');
+        DebugLog.error('⚠️ Erreur API altitude: ${response.statusCode}');
         return null;
       }
     } catch (e) {
-      debugPrint('❌ Erreur récupération altitude: $e');
+      DebugLog.error('❌ Erreur récupération altitude: $e');
       return null;
     }
   }
@@ -54,7 +55,7 @@ class ElevationService {
 
       return List.filled(locations.length, null);
     } catch (e) {
-      debugPrint('❌ Erreur batch altitude: $e');
+      DebugLog.error('❌ Erreur batch altitude: $e');
       return List.filled(locations.length, null);
     }
   }
