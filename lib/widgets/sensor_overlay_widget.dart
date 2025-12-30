@@ -56,6 +56,15 @@ class SensorOverlayWidget extends StatelessWidget {
               position != null ? '${position!.altitude.toStringAsFixed(1)} m' : '---',
             ),
             _buildSensorRow(
+              'Vitesse',
+              position != null ? '${position!.speed.toStringAsFixed(1)} m/s' : '---',
+            ),
+            _buildSensorRow(
+              'Cap',
+              position != null ? '${position!.heading.toStringAsFixed(0)}°' : '---',
+            ),
+            const Divider(color: Colors.white54, height: 16),
+            _buildSensorRow(
               'Accél.',
               accelerometer != null
                   ? 'X:${accelerometer!.x.toStringAsFixed(1)} Y:${accelerometer!.y.toStringAsFixed(1)} Z:${accelerometer!.z.toStringAsFixed(1)}'
@@ -87,7 +96,7 @@ class SensorOverlayWidget extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
-            width: 60,
+            width: 70,
             child: Text(
               '$label:',
               style: const TextStyle(
