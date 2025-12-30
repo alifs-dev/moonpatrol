@@ -98,16 +98,16 @@ class ApiService {
           .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        DebugLog.info('✅ Données envoyées avec succès');
+        DebugLog.info('Données envoyées avec succès');
         DebugLog.info('📥 Réponse: ${response.body}');
         return true;
       } else {
-        DebugLog.error('❌ Erreur API: ${response.statusCode}');
+        DebugLog.error('Erreur API: ${response.statusCode}');
         DebugLog.error('📥 Réponse: ${response.body}');
         return false;
       }
     } catch (e) {
-      DebugLog.error('❌ Erreur envoi API: $e');
+      DebugLog.error('Erreur envoi API: $e');
       return false;
     }
   }
@@ -121,7 +121,7 @@ class ApiService {
       DebugLog.info('🔌 Test connexion API: ${response.statusCode}');
       return response.statusCode < 500;
     } catch (e) {
-      DebugLog.error('❌ API non accessible: $e');
+      DebugLog.error('API non accessible: $e');
       return false;
     }
   }

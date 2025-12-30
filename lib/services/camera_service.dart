@@ -20,7 +20,7 @@ class CameraService {
   /// Initialiser la caméra
   Future<bool> initialize(List<CameraDescription> cameras) async {
     if (cameras.isEmpty) {
-      DebugLog.error('❌ Aucune caméra disponible');
+      DebugLog.error('Aucune caméra disponible');
       return false;
     }
 
@@ -32,10 +32,10 @@ class CameraService {
 
     try {
       await _controller!.initialize();
-      DebugLog.info('✅ Caméra initialisée');
+      DebugLog.info('Caméra initialisée');
       return true;
     } catch (e) {
-      DebugLog.error('❌ Erreur initialisation caméra: $e');
+      DebugLog.error('Erreur initialisation caméra: $e');
       return false;
     }
   }
@@ -43,16 +43,16 @@ class CameraService {
   /// Prendre une photo
   Future<XFile?> takePicture() async {
     if (_controller == null || !_controller!.value.isInitialized) {
-      DebugLog.error('❌ Caméra non initialisée');
+      DebugLog.error('Caméra non initialisée');
       return null;
     }
 
     try {
       final image = await _controller!.takePicture();
-      DebugLog.info('✅ Photo capturée: ${image.path}');
+      DebugLog.info('Photo capturée: ${image.path}');
       return image;
     } catch (e) {
-      DebugLog.error('❌ Erreur capture photo: $e');
+      DebugLog.error('Erreur capture photo: $e');
       return null;
     }
   }

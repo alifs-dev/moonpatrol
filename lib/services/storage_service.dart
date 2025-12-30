@@ -45,9 +45,9 @@ class StorageService {
       );
 
       if (apiSuccess) {
-        DebugLog.info('✅ Données envoyées à l\'API avec succès');
+        DebugLog.info('Données envoyées à l\'API avec succès');
       } else {
-        DebugLog.error('⚠️ Échec envoi API (photo sauvegardée localement)');
+        DebugLog.error('Échec envoi API (photo sauvegardée localement)');
       }
 
       // Sauvegarder dans la galerie avec Gal
@@ -58,7 +58,7 @@ class StorageService {
 
       DebugLog.info('📸 Photo sauvegardée dans la galerie');
     } catch (e) {
-      DebugLog.error('❌ Erreur sauvegarde: $e');
+      DebugLog.error('Erreur sauvegarde: $e');
       rethrow;
     }
   }
@@ -183,7 +183,7 @@ class StorageService {
 
       await exif.close();
 
-      DebugLog.info('✅ EXIF MoonPatrol structuré:');
+      DebugLog.info('EXIF MoonPatrol structuré:');
       DebugLog.info(
         '  📍 GPS: ${data.location?.latitude.toStringAsFixed(6)}, ${data.location?.longitude.toStringAsFixed(6)}',
       );
@@ -194,7 +194,7 @@ class StorageService {
       DebugLog.info('  🔄 Gyroscope: $gyroData');
       DebugLog.info('  🔋 Batterie: ${data.batteryLevel ?? "N/A"}%');
     } catch (e) {
-      DebugLog.error('⚠️ Erreur écriture EXIF: $e');
+      DebugLog.error('Erreur écriture EXIF: $e');
     }
   }
 
@@ -217,7 +217,7 @@ class StorageService {
       await sensorFile.writeAsString(textData);
       DebugLog.info('📊 Fichier texte sauvegardé: ${sensorFile.path}');
     } catch (e) {
-      DebugLog.error('⚠️ Erreur sauvegarde texte: $e');
+      DebugLog.error('Erreur sauvegarde texte: $e');
     }
   }
 

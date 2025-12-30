@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -45,23 +46,14 @@ class PermissionService {
   /// Vérifier si la permission stockage est accordée
   static Future<bool> isStoragePermissionGranted() async {
     if (Platform.isAndroid) {
-      // final status = await Permission.photos.status; // <- ia
-      final status = await Permission.storage.status;
-      return status.isGranted;
+      final androidInfo = await DeviceInfoPlugin().androidInfo;
+      if (androidInfo.version.sdkInt <= 32) {
+        return await Permission.storage.status.isGranted;
+      } else {
+        return await Permission.photos.status.isGranted;
+      }
     }
-    final status = await Permission.photos.status;
 
-    return status.isGranted;
+    return await Permission.photos.status.isGranted;
   }
-
-  /// Vérifier si la permission stockage est accordée
-  // static Future<bool> isPhotoPermissionGranted() async {
-  //   if (Platform.isAndroid) {
-  //     final status = await Permission.photos.status;
-  //     return status.isGranted;
-  //   }
-  //   final status = await Permission.photos.status;
-
-  //   return status.isGranted;
-  // }
 }

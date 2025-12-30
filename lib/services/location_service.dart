@@ -13,7 +13,7 @@ class LocationService {
       // Vérifier si le service est activé
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        DebugLog.error('⚠️ Service de localisation désactivé');
+        DebugLog.error('Service de localisation désactivé');
         return null;
       }
 
@@ -22,13 +22,13 @@ class LocationService {
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
-          DebugLog.error('⚠️ Permission de localisation refusée');
+          DebugLog.error('Permission de localisation refusée');
           return null;
         }
       }
 
       if (permission == LocationPermission.deniedForever) {
-        DebugLog.error('⚠️ Permission de localisation refusée définitivement');
+        DebugLog.error('Permission de localisation refusée définitivement');
         return null;
       }
 
@@ -39,10 +39,10 @@ class LocationService {
       );
 
       _currentPosition = position;
-      DebugLog.info('✅ GPS acquis: ${position.latitude}, ${position.longitude}');
+      DebugLog.info('GPS acquis: ${position.latitude}, ${position.longitude}');
       return position;
     } catch (e) {
-      DebugLog.error('❌ Erreur localisation: $e');
+      DebugLog.error('Erreur localisation: $e');
       return null;
     }
   }

@@ -56,7 +56,7 @@ class _CameraScreenState extends State<CameraScreen> {
     final serviceEnabled = await PermissionService.isLocationServiceEnabled();
 
     if (!locationGranted) {
-      _showMessage('⚠️ Permission GPS refusée', Colors.orange);
+      _showMessage('Permission GPS refusée', Colors.orange);
     } else if (!serviceEnabled) {
       _showGpsDisabledMessage();
     }
@@ -118,7 +118,7 @@ class _CameraScreenState extends State<CameraScreen> {
       // _showMessage('Data upload!', success ? Colors.green : Colors.red);
     } catch (e) {
       setState(() => _status = 'Erreur: $e');
-      _showMessage('❌ Erreur: $e', Colors.red);
+      _showMessage('Erreur: $e', Colors.red);
     } finally {
       setState(() => _isCapturing = false);
     }
@@ -139,7 +139,7 @@ class _CameraScreenState extends State<CameraScreen> {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text('⚠️ GPS désactivé. Activez-le dans les paramètres.'),
+        content: const Text('GPS désactivé. Activez-le dans les paramètres.'),
         backgroundColor: Colors.orange,
         duration: const Duration(seconds: 30),
         action: SnackBarAction(

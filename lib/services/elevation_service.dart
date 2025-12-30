@@ -22,14 +22,14 @@ class ElevationService {
         final data = jsonDecode(response.body);
         final elevation = data['results'][0]['elevation'];
 
-        DebugLog.info('✅ Altitude API récupérée: ${elevation}m');
+        DebugLog.info('Altitude API récupérée: ${elevation}m');
         return elevation.toDouble();
       } else {
-        DebugLog.error('⚠️ Erreur API altitude: ${response.statusCode}');
+        DebugLog.error('Erreur API altitude: ${response.statusCode}');
         return null;
       }
     } catch (e) {
-      DebugLog.error('❌ Erreur récupération altitude: $e');
+      DebugLog.error('Erreur récupération altitude: $e');
       return null;
     }
   }
@@ -55,7 +55,7 @@ class ElevationService {
 
       return List.filled(locations.length, null);
     } catch (e) {
-      DebugLog.error('❌ Erreur batch altitude: $e');
+      DebugLog.error('Erreur batch altitude: $e');
       return List.filled(locations.length, null);
     }
   }
