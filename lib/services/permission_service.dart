@@ -45,6 +45,7 @@ class PermissionService {
   /// Vérifier si la permission stockage est accordée
   static Future<bool> isStoragePermissionGranted() async {
     if (Platform.isAndroid) {
+      // final status = await Permission.photos.status; // <- ia
       final status = await Permission.storage.status;
       return status.isGranted;
     }
