@@ -1,5 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter/material.dart';
+import 'package:moonpatrol/utils/logger/debug_log.dart';
 
 /// Service de gestion des notifications
 class NotificationService {
@@ -33,12 +33,12 @@ class NotificationService {
     );
 
     _initialized = true;
-    debugPrint('✅ Service de notifications initialisé');
+    DebugLog.info('Service de notifications initialisé');
   }
 
   /// Callback quand l'utilisateur tape sur une notification
   void _onNotificationTap(NotificationResponse response) {
-    debugPrint('📱 Notification tapped: ${response.payload}');
+    DebugLog.info('Notification tapped: ${response.payload}');
   }
 
   /// Demander les permissions (iOS uniquement)
@@ -75,7 +75,7 @@ class NotificationService {
   Future<void> notifyApiSuccess() async {
     await _showNotification(
       id: 2,
-      title: '✅ Données envoyées',
+      title: 'Données envoyées',
       body: 'Photo et capteurs envoyés au serveur',
       payload: 'api_success',
     );
@@ -85,7 +85,7 @@ class NotificationService {
   Future<void> notifyApiError() async {
     await _showNotification(
       id: 3,
-      title: '⚠️ Erreur serveur',
+      title: 'Erreur serveur',
       body: 'Impossible d\'envoyer les données (photo sauvegardée localement)',
       payload: 'api_error',
     );
@@ -95,7 +95,7 @@ class NotificationService {
   Future<void> notifyGpsFixed() async {
     await _showNotification(
       id: 4,
-      title: '📍 GPS acquis',
+      title: 'GPS acquis',
       body: 'Position GPS disponible',
       payload: 'gps_fixed',
     );
@@ -105,7 +105,7 @@ class NotificationService {
   Future<void> notifyElevationApiReceived(double elevation) async {
     await _showNotification(
       id: 5,
-      title: '🌍 Altitude API',
+      title: 'Altitude API',
       body: 'Altitude précise : ${elevation.toStringAsFixed(1)} m',
       payload: 'elevation_api',
     );
@@ -115,7 +115,7 @@ class NotificationService {
   Future<void> notifyPhotoProgress({required int current, required int total}) async {
     await _showProgressNotification(
       id: 10,
-      title: '📸 Traitement des photos',
+      title: 'Traitement des photos',
       body: 'Photo $current/$total',
       progress: current,
       maxProgress: total,

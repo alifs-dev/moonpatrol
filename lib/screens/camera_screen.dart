@@ -7,6 +7,7 @@ import 'package:moonpatrol/models/sensor_data.dart';
 import 'package:moonpatrol/services/camera_service.dart';
 import 'package:moonpatrol/services/dot.env_service.dart';
 import 'package:moonpatrol/services/elevation_service.dart';
+import 'package:moonpatrol/services/notification_service.dart';
 import 'package:moonpatrol/services/sensor_service.dart';
 import 'package:moonpatrol/services/location_service.dart';
 import 'package:moonpatrol/services/storage_service.dart';
@@ -31,13 +32,15 @@ class _CameraScreenState extends State<CameraScreen> {
   final LocationService _locationService = LocationService();
   final StorageService _storageService = StorageService();
   final ElevationService _elevationService = ElevationService();
+  final NotificationService _notificationService = NotificationService();
 
   // État
   bool _isCapturing = false;
-  String _status = 'Prêt';
   Position? _currentPosition;
   double? _currentElevationApi;
   double _zoomLevel = EnvConfig.zoomLevel;
+  int _photoCount = 0;
+
   @override
   void initState() {
     super.initState();
@@ -70,12 +73,12 @@ class _CameraScreenState extends State<CameraScreen> {
     _updateLocation();
 
     // Mise à jour périodique toutes les 3 secondes
-    Timer.periodic(const Duration(seconds: 3), (_) {
+    Timer.periodic(Duration(seconds: EnvConfig.apiElevationDuration), (_) {
       _updateLocation();
     });
 
     // Mise à jour batterie toutes les 30 secondes
-    Timer.periodic(const Duration(seconds: 30), (_) {
+    Timer.periodic(Duration(seconds: EnvConfig.batteryDuration), (_) {
       _sensorService.updateBattery();
     });
   }
@@ -134,9 +137,17 @@ class _CameraScreenState extends State<CameraScreen> {
       // Sauvegarder
       await _storageService.savePhotoWithMetadata(image.path, sensorData);
 
-      _showMessage('📸 Photo sauvegardée dans la galerie !', Colors.green);
+      // Notifier la sauvegarde de photo
+      _photoCount++;
+      await _notificationService.notifyPhotoSaved(
+        photoCount: _photoCount,
+        hasGps: _currentPosition != null,
+        hasElevationApi: _currentElevationApi != null,
+      );
+
+      _showMessage('Photo sauvegardée dans la galerie !', Colors.green);
     } catch (e) {
-      _showMessage('❌ Erreur: $e', Colors.red);
+      _showMessage('Erreur: $e', Colors.red);
     } finally {
       setState(() => _isCapturing = false);
     }
@@ -205,25 +216,6 @@ class _CameraScreenState extends State<CameraScreen> {
             batteryLevel: _sensorService.batteryLevel,
             zoomLevel: _zoomLevel,
           ),
-
-          if (_status.isNotEmpty && _status != 'Prêt')
-            Positioned(
-              bottom: 100,
-              left: 16,
-              right: 16,
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.7),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  _status,
-                  style: const TextStyle(color: Colors.greenAccent, fontSize: 12),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
 
           CameraButtonWidget(isCapturing: _isCapturing, onPressed: _takePicture),
         ],

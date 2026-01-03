@@ -79,7 +79,7 @@ class SensorOverlayWidget extends StatelessWidget {
               'GPS',
               position != null
                   ? '${position!.latitude.toStringAsFixed(6)}, ${position!.longitude.toStringAsFixed(6)}'
-                  : '🔍 Recherche GPS...',
+                  : 'Recherche GPS...',
             ),
             _buildSensorRow('Altitude', _formatAltitude(), color: _getAltitudeColor()),
             _buildSensorRow(

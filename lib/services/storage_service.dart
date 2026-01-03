@@ -94,7 +94,7 @@ class StorageService {
             );
 
         if (success) {
-          DebugLog.success('✅ Données envoyées à l\'API avec succès');
+          DebugLog.success('Données envoyées à l\'API avec succès');
         } else {
           DebugLog.error('Échec envoi API (photo sauvegardée localement)');
         }
@@ -224,6 +224,7 @@ class StorageService {
       DebugLog.info('Accelerometre: $accelData');
       DebugLog.info('Gyroscope: $gyroData');
       DebugLog.info('Batterie: ${data.batteryLevel ?? "N/A"}%');
+      DebugLog.info('JSON UserComment: ${jsonString.length} caractères');
     } catch (e) {
       DebugLog.error('Erreur écriture EXIF: $e');
     }

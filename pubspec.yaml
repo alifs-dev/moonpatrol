@@ -58,6 +58,7 @@ dependencies:
   permission_handler: ^11.0.1
 
   flutter_local_notifications: ^17.2.3
+  sprintf: ^7.0.0
   
 dev_dependencies:
   flutter_test:
