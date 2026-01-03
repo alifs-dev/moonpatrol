@@ -21,6 +21,12 @@ class SensorOverlayWidget extends StatelessWidget {
     this.zoomLevel,
   });
 
+  String _formatAltitude(double? altitude) {
+    if (altitude == null) return '---';
+    if (altitude == 0.0) return '0 m (GPS 2D fix)';
+    return '${altitude.toStringAsFixed(1)} m';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -53,7 +59,12 @@ class SensorOverlayWidget extends StatelessWidget {
             ),
             _buildSensorRow(
               'Alt.',
-              position != null ? '${position!.altitude.toStringAsFixed(1)} m' : '---',
+              _formatAltitude(position?.altitude),
+              color: (position?.altitude == 0.0) ? Colors.orange : Colors.white,
+            ),
+            _buildSensorRow(
+              'Précision',
+              position != null ? '±${position!.accuracy.toStringAsFixed(1)} m' : '---',
             ),
             _buildSensorRow(
               'Vitesse',
@@ -90,7 +101,7 @@ class SensorOverlayWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildSensorRow(String label, String value) {
+  Widget _buildSensorRow(String label, String value, {Color color = Colors.white}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
@@ -110,10 +121,10 @@ class SensorOverlayWidget extends StatelessWidget {
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: color,
                 fontSize: 11,
-                shadows: [Shadow(color: Colors.black, blurRadius: 4)],
+                shadows: const [Shadow(color: Colors.black, blurRadius: 4)],
               ),
             ),
           ),

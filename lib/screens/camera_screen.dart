@@ -31,7 +31,6 @@ class _CameraScreenState extends State<CameraScreen> {
 
   // État
   bool _isCapturing = false;
-  String _status = 'Prêt';
   Position? _currentPosition;
   double _zoomLevel = EnvConfig.zoomLevel;
 
@@ -89,7 +88,6 @@ class _CameraScreenState extends State<CameraScreen> {
 
     setState(() {
       _isCapturing = true;
-      _status = 'Capture en cours...';
     });
 
     try {
@@ -113,11 +111,9 @@ class _CameraScreenState extends State<CameraScreen> {
       // Sauvegarder
       await _storageService.savePhotoWithMetadata(image.path, sensorData);
 
-      setState(() => _status = 'Photo enregistrée !');
       _showMessage('Photo sauvegardée dans la galerie !', Colors.green);
       // _showMessage('Data upload!', success ? Colors.green : Colors.red);
     } catch (e) {
-      setState(() => _status = 'Erreur: $e');
       _showMessage('Erreur: $e', Colors.red);
     } finally {
       setState(() => _isCapturing = false);
@@ -186,26 +182,6 @@ class _CameraScreenState extends State<CameraScreen> {
             batteryLevel: _sensorService.batteryLevel,
             zoomLevel: _zoomLevel,
           ),
-
-          // Message de statut
-          if (_status.isNotEmpty && _status != 'Prêt')
-            Positioned(
-              bottom: 100,
-              left: 16,
-              right: 16,
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.7),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  _status,
-                  style: const TextStyle(color: Colors.greenAccent, fontSize: 12),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
 
           // Bouton de capture
           CameraButtonWidget(isCapturing: _isCapturing, onPressed: _takePicture),
