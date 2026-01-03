@@ -5,9 +5,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:native_exif/native_exif.dart';
 import 'package:gal/gal.dart';
 import 'package:moonpatrol/models/sensor_data.dart';
-import 'elevation_service.dart';
-import 'api_service.dart';
-import 'dot.env_service.dart';
+import 'package:moonpatrol/services/elevation_service.dart';
+import 'package:moonpatrol/services/api_service.dart';
+import 'package:moonpatrol/services/dot.env_service.dart';
 
 /// Service de sauvegarde des photos et données
 class StorageService {
@@ -25,7 +25,7 @@ class StorageService {
       final tempImage = File(imagePath);
       await tempImage.copy(photoFile.path);
 
-      // Récupérer l'altitude via API
+      // Récupérer l'altitude via API (non-bloquant)
       double? elevationApi;
       if (sensorData.location != null) {
         elevationApi = await _elevationService.getElevation(
@@ -34,33 +34,75 @@ class StorageService {
         );
       }
 
+      // try {
+      //   elevationApi = await _elevationService
+      //       .getElevation(sensorData.location!.latitude, sensorData.location!.longitude)
+      //       .timeout(
+      //         const Duration(seconds: 5),
+      //         onTimeout: () {
+      //           DebugLog.info('⏱️ Timeout altitude API');
+      //           return null;
+      //         },
+      //       );
+      // } catch (e) {
+      //   DebugLog.error('Erreur altitude API (ignorée): $e');
+      //   elevationApi = null;
+      // }
+
       // Écrire les métadonnées EXIF structurées
       await _writeExifData(photoFile.path, sensorData, elevationApi);
 
-      // Envoyer à l'API forensic
-      final apiSuccess = await _apiService.sendForensicData(
-        imagePath: photoFile.path,
-        sensorData: sensorData,
-        elevationApi: elevationApi,
-      );
-
-      if (apiSuccess) {
-        DebugLog.info('Données envoyées à l\'API avec succès');
-      } else {
-        DebugLog.error('Échec envoi API (photo sauvegardée localement)');
-      }
-
-      // Sauvegarder dans la galerie avec Gal
+      // Sauvegarder dans la galerie IMMÉDIATEMENT (ne pas attendre l'API)
       await Gal.putImage(photoFile.path, album: EnvConfig.albumName);
 
       // Sauvegarder les données dans un fichier texte
       await _saveSensorTextFile(timestamp, sensorData, elevationApi);
 
       DebugLog.success('Photo sauvegardée dans la galerie');
+
+      // Envoyer à l'API en arrière-plan (SANS BLOQUER)
+      _sendToApiInBackground(photoFile.path, sensorData, elevationApi);
     } catch (e) {
       DebugLog.error('Erreur sauvegarde: $e');
       rethrow;
     }
+  }
+
+  /// Envoyer les données à l'API en arrière-plan (non-bloquant)
+  void _sendToApiInBackground(
+    String imagePath,
+    SensorData sensorData,
+    double? elevationApi,
+  ) {
+    // Lancer l'envoi sans attendre (fire and forget)
+    Future(() async {
+      try {
+        DebugLog.info('Envoi API en arrière-plan...');
+
+        final success = await _apiService
+            .sendForensicData(
+              imagePath: imagePath,
+              sensorData: sensorData,
+              elevationApi: elevationApi,
+            )
+            .timeout(
+              const Duration(seconds: 30),
+              onTimeout: () {
+                DebugLog.warning('Timeout envoi API (ignoré)');
+                return false;
+              },
+            );
+
+        if (success) {
+          DebugLog.success('Données envoyées à l\'API avec succès');
+        } else {
+          DebugLog.error('Échec envoi API (photo sauvegardée localement)');
+        }
+      } catch (e) {
+        DebugLog.error('Erreur API (ignorée): $e');
+        // L'erreur est ignorée, l'utilisateur peut continuer
+      }
+    });
   }
 
   /// Écrire les données EXIF dans l'image de manière structurée
@@ -162,30 +204,19 @@ class StorageService {
 
       // === ÉCRITURE DANS LES TAGS EXIF ===
       await exif.writeAttributes({
-        // Identification
-        // 'Make': 'MoonPatrol',
-        // 'Model': 'Camera Sensors Pro',
         'Software': 'MoonPatrol v1.0',
         'ImageDescription': 'Photo avec donnees capteurs MoonPatrol',
         'ImageUniqueID': 'moonpatrol_${data.timestamp.millisecondsSinceEpoch}',
 
         // JSON complet dans UserComment (priorité de lecture)
         'UserComment': jsonString,
-
-        // Tags lisibles individuels (fallback)
-        // 'Artist': 'magnetometre: $magnetoData',
-        // 'Copyright': 'accelerometre: $accelData',
-        // 'XPKeywords': 'gyroscope: $gyroData',
-        // 'XPSubject': 'batterie: ${data.batteryLevel ?? "N/A"}%',
-        // 'XPTitle':
-        //     'elevation_api: ${elevationApi != null ? "${elevationApi.toStringAsFixed(2)}m" : "N/A"}',
       });
 
       await exif.close();
 
       DebugLog.info('EXIF MoonPatrol structuré:');
       DebugLog.info(
-        '  📍 GPS: ${data.location?.latitude.toStringAsFixed(6)}, ${data.location?.longitude.toStringAsFixed(6)}',
+        'GPS: ${data.location?.latitude.toStringAsFixed(6)}, ${data.location?.longitude.toStringAsFixed(6)}',
       );
       DebugLog.info('Altitude GPS: ${data.location?.altitude.toStringAsFixed(1)}m');
       DebugLog.info('Altitude API: ${elevationApi?.toStringAsFixed(1) ?? "N/A"}m');
@@ -193,6 +224,7 @@ class StorageService {
       DebugLog.info('Accelerometre: $accelData');
       DebugLog.info('Gyroscope: $gyroData');
       DebugLog.info('Batterie: ${data.batteryLevel ?? "N/A"}%');
+      DebugLog.info('JSON UserComment: ${jsonString.length} caractères');
     } catch (e) {
       DebugLog.error('Erreur écriture EXIF: $e');
     }

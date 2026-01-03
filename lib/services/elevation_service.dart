@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:moonpatrol/utils/logger/debug_log.dart';
+import 'package:sprintf/sprintf.dart';
 import 'dot.env_service.dart';
 
 /// Service pour récupérer l'altitude via API (sans clé)
@@ -12,7 +13,8 @@ class ElevationService {
   /// Retourne l'altitude en mètres, ou null en cas d'erreur
   Future<double?> getElevation(double latitude, double longitude) async {
     try {
-      final url = Uri.parse('$_baseUrl?locations=$latitude,$longitude');
+      final urlString = sprintf(_baseUrl, [latitude.toString(), longitude.toString()]);
+      final url = Uri.parse(urlString);
 
       DebugLog.info('Requête altitude API: $url');
 

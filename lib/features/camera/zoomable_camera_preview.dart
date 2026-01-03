@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:moonpatrol/services/dot.env_service.dart';
 
 class ZoomableCameraPreview extends StatefulWidget {
   final CameraController controller;
@@ -18,10 +19,10 @@ class ZoomableCameraPreview extends StatefulWidget {
 }
 
 class _ZoomableCameraPreviewState extends State<ZoomableCameraPreview> {
-  double _currentZoom = 1.0;
-  double _baseZoom = 1.0;
-  double _minZoom = 1.0;
-  double _maxZoom = 1.0;
+  double _currentZoom = EnvConfig.zoomLevel;
+  double _baseZoom = EnvConfig.zoomLevel;
+  double _minZoom = 0;
+  double _maxZoom = 10.0;
 
   @override
   void initState() {

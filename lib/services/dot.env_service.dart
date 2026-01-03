@@ -21,9 +21,15 @@ class EnvConfig {
     return zoom;
   }
 
+  static int get batteryDuration =>
+      int.tryParse(dotenv.env['UPDATE_BATTERY_DURATION']!) ?? 30;
+
   // Elevation API
   static String get elevationApiUrl =>
       dotenv.env['ELEVATION_API_URL'] ?? 'https://api.open-elevation.com/api/v1/lookup';
+
+  static int get apiElevationDuration =>
+      int.tryParse(dotenv.env['UPDATE_ELEVATION_API_DURATION']!) ?? 30;
 
   static String get albumName => dotenv.env['ALBUM_NAME'] ?? 'Moon Patrol Album';
 

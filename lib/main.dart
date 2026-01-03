@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'screens/permission_screen.dart';
-import 'services/dot.env_service.dart';
+import 'package:moonpatrol/services/dot.env_service.dart';
+import 'package:moonpatrol/screens/permission_screen.dart';
+import 'package:moonpatrol/services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -9,6 +10,10 @@ void main() async {
   // Charger la configuration .env
   await EnvConfig.initialize();
   EnvConfig.printConfig();
+
+  // Initialiser les notifications
+  await NotificationService().initialize();
+  await NotificationService().requestPermissions();
 
   // Obtenir les caméras disponibles
   final cameras = await availableCameras();

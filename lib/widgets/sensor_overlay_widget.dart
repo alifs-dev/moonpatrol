@@ -5,6 +5,7 @@ import 'package:sensors_plus/sensors_plus.dart';
 /// Widget affichant les données des capteurs en overlay
 class SensorOverlayWidget extends StatelessWidget {
   final Position? position;
+  final double? elevationApi;
   final AccelerometerEvent? accelerometer;
   final GyroscopeEvent? gyroscope;
   final MagnetometerEvent? magnetometer;
@@ -14,12 +15,41 @@ class SensorOverlayWidget extends StatelessWidget {
   const SensorOverlayWidget({
     super.key,
     this.position,
+    this.elevationApi,
     this.accelerometer,
     this.gyroscope,
     this.magnetometer,
     this.batteryLevel,
     this.zoomLevel,
   });
+
+  String _formatAltitude() {
+    final altGps = position?.altitude;
+
+    // Si on a l'altitude API, l'utiliser en priorité
+    if (elevationApi != null) {
+      if (altGps != null && altGps != 0.0) {
+        return '${elevationApi!.toStringAsFixed(1)} m (API) / ${altGps.toStringAsFixed(1)} m (GPS)';
+      }
+      return '${elevationApi!.toStringAsFixed(1)} m (API)';
+    }
+
+    // Sinon utiliser l'altitude GPS
+    if (altGps == null) return '---';
+    if (altGps == 0.0) return '0 m (GPS 2D fix)';
+    return '${altGps.toStringAsFixed(1)} m (GPS)';
+  }
+
+  Color _getAltitudeColor() {
+    // Vert si on a l'altitude API
+    if (elevationApi != null) return Colors.green;
+
+    // Orange si altitude GPS = 0
+    if (position?.altitude == 0.0) return Colors.orange;
+
+    // Blanc par défaut
+    return Colors.white;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +79,22 @@ class SensorOverlayWidget extends StatelessWidget {
               'GPS',
               position != null
                   ? '${position!.latitude.toStringAsFixed(6)}, ${position!.longitude.toStringAsFixed(6)}'
-                  : '🔍 Recherche GPS...',
+                  : 'Recherche GPS...',
+            ),
+            _buildSensorRow('Altitude', _formatAltitude(), color: _getAltitudeColor()),
+            _buildSensorRow(
+              'Précision',
+              position != null ? '±${position!.accuracy.toStringAsFixed(1)} m' : '---',
             ),
             _buildSensorRow(
-              'Alt.',
-              position != null ? '${position!.altitude.toStringAsFixed(1)} m' : '---',
+              'Vitesse',
+              position != null ? '${position!.speed.toStringAsFixed(1)} m/s' : '---',
             ),
+            _buildSensorRow(
+              'Cap',
+              position != null ? '${position!.heading.toStringAsFixed(0)}°' : '---',
+            ),
+            const Divider(color: Colors.white54, height: 16),
             _buildSensorRow(
               'Accél.',
               accelerometer != null
@@ -81,13 +121,13 @@ class SensorOverlayWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildSensorRow(String label, String value) {
+  Widget _buildSensorRow(String label, String value, {Color color = Colors.white}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
         children: [
           SizedBox(
-            width: 60,
+            width: 70,
             child: Text(
               '$label:',
               style: const TextStyle(
@@ -101,10 +141,10 @@ class SensorOverlayWidget extends StatelessWidget {
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: color,
                 fontSize: 11,
-                shadows: [Shadow(color: Colors.black, blurRadius: 4)],
+                shadows: const [Shadow(color: Colors.black, blurRadius: 4)],
               ),
             ),
           ),
