@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 class SensorData {
   final DateTime timestamp;
   final Position? location;
+  final double? elevationApi;
   final AccelerometerEvent? accelerometer;
   final GyroscopeEvent? gyroscope;
   final MagnetometerEvent? magnetometer;
@@ -15,6 +16,7 @@ class SensorData {
   SensorData({
     required this.timestamp,
     this.location,
+    this.elevationApi,
     this.accelerometer,
     this.gyroscope,
     this.magnetometer,
@@ -34,7 +36,8 @@ LOCALISATION:
 ${location != null ? '''
   Latitude: ${location!.latitude}
   Longitude: ${location!.longitude}
-  Altitude: ${location!.altitude} m
+  Altitude GPS: ${location!.altitude} m
+  Altitude API: ${elevationApi ?? 'N/A'} m
   Précision: ${location!.accuracy} m
   Vitesse: ${location!.speed} m/s
   Cap: ${location!.heading}°

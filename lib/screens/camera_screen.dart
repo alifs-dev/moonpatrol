@@ -6,10 +6,12 @@ import 'package:moonpatrol/features/camera/zoomable_camera_preview.dart';
 import 'package:moonpatrol/models/sensor_data.dart';
 import 'package:moonpatrol/services/camera_service.dart';
 import 'package:moonpatrol/services/dot.env_service.dart';
+import 'package:moonpatrol/services/elevation_service.dart';
 import 'package:moonpatrol/services/sensor_service.dart';
 import 'package:moonpatrol/services/location_service.dart';
 import 'package:moonpatrol/services/storage_service.dart';
 import 'package:moonpatrol/services/permission_service.dart';
+import 'package:moonpatrol/utils/logger/debug_log.dart';
 import 'package:moonpatrol/widgets/sensor_overlay_widget.dart';
 import 'package:moonpatrol/widgets/camera_button_widget.dart';
 
@@ -28,12 +30,14 @@ class _CameraScreenState extends State<CameraScreen> {
   final SensorService _sensorService = SensorService();
   final LocationService _locationService = LocationService();
   final StorageService _storageService = StorageService();
+  final ElevationService _elevationService = ElevationService();
 
   // État
   bool _isCapturing = false;
+  String _status = 'Prêt';
   Position? _currentPosition;
+  double? _currentElevationApi;
   double _zoomLevel = EnvConfig.zoomLevel;
-
   @override
   void initState() {
     super.initState();
@@ -80,7 +84,25 @@ class _CameraScreenState extends State<CameraScreen> {
     final position = await _locationService.getCurrentPosition();
     if (position != null && mounted) {
       setState(() => _currentPosition = position);
+
+      // Récupérer l'altitude API en arrière-plan
+      _updateElevationApi(position);
     }
+  }
+
+  void _updateElevationApi(Position position) {
+    // Mise à jour non-bloquante de l'altitude API
+    _elevationService
+        .getElevation(position.latitude, position.longitude)
+        .then((elevation) {
+          if (mounted && elevation != null) {
+            setState(() => _currentElevationApi = elevation);
+            DebugLog.info('Altitude API mise à jour: ${elevation.toStringAsFixed(1)}m');
+          }
+        })
+        .catchError((e) {
+          DebugLog.error('Erreur altitude API (overlay): $e');
+        });
   }
 
   Future<void> _takePicture() async {
@@ -100,6 +122,7 @@ class _CameraScreenState extends State<CameraScreen> {
       final sensorData = SensorData(
         timestamp: DateTime.now(),
         location: _currentPosition,
+        elevationApi: _currentElevationApi,
         accelerometer: _sensorService.accelerometer,
         gyroscope: _sensorService.gyroscope,
         magnetometer: _sensorService.magnetometer,
@@ -111,10 +134,9 @@ class _CameraScreenState extends State<CameraScreen> {
       // Sauvegarder
       await _storageService.savePhotoWithMetadata(image.path, sensorData);
 
-      _showMessage('Photo sauvegardée dans la galerie !', Colors.green);
-      // _showMessage('Data upload!', success ? Colors.green : Colors.red);
+      _showMessage('📸 Photo sauvegardée dans la galerie !', Colors.green);
     } catch (e) {
-      _showMessage('Erreur: $e', Colors.red);
+      _showMessage('❌ Erreur: $e', Colors.red);
     } finally {
       setState(() => _isCapturing = false);
     }
@@ -176,6 +198,7 @@ class _CameraScreenState extends State<CameraScreen> {
           // Overlay avec les données des capteurs
           SensorOverlayWidget(
             position: _currentPosition,
+            elevationApi: _currentElevationApi,
             accelerometer: _sensorService.accelerometer,
             gyroscope: _sensorService.gyroscope,
             magnetometer: _sensorService.magnetometer,
@@ -183,7 +206,25 @@ class _CameraScreenState extends State<CameraScreen> {
             zoomLevel: _zoomLevel,
           ),
 
-          // Bouton de capture
+          if (_status.isNotEmpty && _status != 'Prêt')
+            Positioned(
+              bottom: 100,
+              left: 16,
+              right: 16,
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.7),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  _status,
+                  style: const TextStyle(color: Colors.greenAccent, fontSize: 12),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+
           CameraButtonWidget(isCapturing: _isCapturing, onPressed: _takePicture),
         ],
       ),

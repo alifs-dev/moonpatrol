@@ -5,6 +5,7 @@ import 'package:sensors_plus/sensors_plus.dart';
 /// Widget affichant les données des capteurs en overlay
 class SensorOverlayWidget extends StatelessWidget {
   final Position? position;
+  final double? elevationApi;
   final AccelerometerEvent? accelerometer;
   final GyroscopeEvent? gyroscope;
   final MagnetometerEvent? magnetometer;
@@ -14,6 +15,7 @@ class SensorOverlayWidget extends StatelessWidget {
   const SensorOverlayWidget({
     super.key,
     this.position,
+    this.elevationApi,
     this.accelerometer,
     this.gyroscope,
     this.magnetometer,
@@ -21,10 +23,32 @@ class SensorOverlayWidget extends StatelessWidget {
     this.zoomLevel,
   });
 
-  String _formatAltitude(double? altitude) {
-    if (altitude == null) return '---';
-    if (altitude == 0.0) return '0 m (GPS 2D fix)';
-    return '${altitude.toStringAsFixed(1)} m';
+  String _formatAltitude() {
+    final altGps = position?.altitude;
+
+    // Si on a l'altitude API, l'utiliser en priorité
+    if (elevationApi != null) {
+      if (altGps != null && altGps != 0.0) {
+        return '${elevationApi!.toStringAsFixed(1)} m (API) / ${altGps.toStringAsFixed(1)} m (GPS)';
+      }
+      return '${elevationApi!.toStringAsFixed(1)} m (API)';
+    }
+
+    // Sinon utiliser l'altitude GPS
+    if (altGps == null) return '---';
+    if (altGps == 0.0) return '0 m (GPS 2D fix)';
+    return '${altGps.toStringAsFixed(1)} m (GPS)';
+  }
+
+  Color _getAltitudeColor() {
+    // Vert si on a l'altitude API
+    if (elevationApi != null) return Colors.green;
+
+    // Orange si altitude GPS = 0
+    if (position?.altitude == 0.0) return Colors.orange;
+
+    // Blanc par défaut
+    return Colors.white;
   }
 
   @override
@@ -57,11 +81,7 @@ class SensorOverlayWidget extends StatelessWidget {
                   ? '${position!.latitude.toStringAsFixed(6)}, ${position!.longitude.toStringAsFixed(6)}'
                   : '🔍 Recherche GPS...',
             ),
-            _buildSensorRow(
-              'Alt.',
-              _formatAltitude(position?.altitude),
-              color: (position?.altitude == 0.0) ? Colors.orange : Colors.white,
-            ),
+            _buildSensorRow('Altitude', _formatAltitude(), color: _getAltitudeColor()),
             _buildSensorRow(
               'Précision',
               position != null ? '±${position!.accuracy.toStringAsFixed(1)} m' : '---',
