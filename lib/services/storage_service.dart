@@ -204,8 +204,8 @@ class StorageService {
 
       // === ÉCRITURE DANS LES TAGS EXIF ===
       await exif.writeAttributes({
-        'Software': 'MoonPatrol v1.0',
-        'ImageDescription': 'Photo avec donnees capteurs MoonPatrol',
+        'Software': '${EnvConfig.appName} v${EnvConfig.appVersion}',
+        'ImageDescription': 'Photo avec donnees capteurs ${EnvConfig.appName}',
         'ImageUniqueID': 'moonpatrol_${data.timestamp.millisecondsSinceEpoch}',
 
         // JSON complet dans UserComment (priorité de lecture)
@@ -214,7 +214,7 @@ class StorageService {
 
       await exif.close();
 
-      DebugLog.info('EXIF MoonPatrol structuré:');
+      DebugLog.info('EXIF ${EnvConfig.appName} structuré:');
       DebugLog.info(
         'GPS: ${data.location?.latitude.toStringAsFixed(6)}, ${data.location?.longitude.toStringAsFixed(6)}',
       );

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:moonpatrol/screens/home_screen.dart';
+import 'package:moonpatrol/screens/responsive_scaffold.dart';
+import 'package:moonpatrol/services/dot.env_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:moonpatrol/services/permission_service.dart';
-import 'camera_screen.dart';
 import 'package:camera/camera.dart';
 
 /// Écran de demande de permissions avant utilisation
@@ -52,7 +54,7 @@ class _PermissionScreenState extends State<PermissionScreen> {
 
   void _navigateToCamera() {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => CameraScreen(cameras: widget.cameras)),
+      MaterialPageRoute(builder: (context) => HomeScreen(cameras: widget.cameras)),
     );
   }
 
@@ -68,9 +70,9 @@ class _PermissionScreenState extends State<PermissionScreen> {
   Widget build(BuildContext context) {
     final allGranted = _cameraGranted && _locationGranted && _storageGranted;
 
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
+    return ResponsiveScaffold(
+      child: Scaffold(
+        body: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -88,8 +90,8 @@ class _PermissionScreenState extends State<PermissionScreen> {
               const SizedBox(height: 16),
 
               // Description
-              const Text(
-                'MoonPatrol a besoin de ces autorisations pour fonctionner correctement :',
+              Text(
+                '${EnvConfig.appName} a besoin de ces autorisations pour fonctionner correctement :',
                 style: TextStyle(fontSize: 16, color: Colors.grey),
                 textAlign: TextAlign.center,
               ),

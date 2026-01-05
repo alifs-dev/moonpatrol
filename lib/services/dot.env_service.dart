@@ -34,7 +34,7 @@ class EnvConfig {
   static String get albumName => dotenv.env['ALBUM_NAME'] ?? 'Moon Patrol Album';
 
   // App Config
-  static String get appName => dotenv.env['APP_NAME'] ?? 'MoonPatrol';
+  static String get appName => dotenv.env['APP_NAME'] ?? 'Moon Patrol';
   static String get appVersion => dotenv.env['APP_VERSION'] ?? '1.0.0';
 
   // Debug
@@ -50,11 +50,11 @@ class EnvConfig {
   static void printConfig() {
     if (!debugMode) return;
 
-    print('🔧 Configuration MoonPatrol:');
-    print('  API URL: $apiForensicUrl');
-    print('  Elevation API: $elevationApiUrl');
-    print('  App: $appName v$appVersion');
-    print('  Debug: $debugMode');
-    print('  Logs: $enableLogs');
+    DebugLog.info('🔧 Configuration ${EnvConfig.appName}:');
+    DebugLog.info('  API URL: $apiForensicUrl');
+    DebugLog.info('  Elevation API: $elevationApiUrl');
+    DebugLog.info('  App: $appName v$appVersion');
+    DebugLog.info('  Debug: $debugMode');
+    DebugLog.info('  Logs: $enableLogs');
   }
 }

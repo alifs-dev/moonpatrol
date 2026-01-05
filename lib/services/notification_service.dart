@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:moonpatrol/services/dot.env_service.dart';
 import 'package:moonpatrol/utils/logger/debug_log.dart';
 
 /// Service de gestion des notifications
@@ -65,7 +66,7 @@ class NotificationService {
 
     await _showNotification(
       id: 1,
-      title: '📸 Photo enregistrée',
+      title: 'Photo enregistrée',
       body: body,
       payload: 'photo_saved',
     );
@@ -129,10 +130,10 @@ class NotificationService {
     required String body,
     String? payload,
   }) async {
-    const androidDetails = AndroidNotificationDetails(
+    var androidDetails = AndroidNotificationDetails(
       'moonpatrol_channel',
-      'MoonPatrol',
-      channelDescription: 'Notifications de l\'application MoonPatrol',
+      EnvConfig.appName,
+      channelDescription: 'Notifications de l\'application ${EnvConfig.appName}',
       importance: Importance.high,
       priority: Priority.high,
       showWhen: true,
@@ -144,7 +145,7 @@ class NotificationService {
       presentSound: true,
     );
 
-    const details = NotificationDetails(android: androidDetails, iOS: iosDetails);
+    var details = NotificationDetails(android: androidDetails, iOS: iosDetails);
 
     await _notifications.show(id, title, body, details, payload: payload);
   }
@@ -159,7 +160,7 @@ class NotificationService {
   }) async {
     final androidDetails = AndroidNotificationDetails(
       'moonpatrol_progress_channel',
-      'MoonPatrol Progress',
+      '${EnvConfig.appName} Progress',
       channelDescription: 'Progression des traitements',
       importance: Importance.low,
       priority: Priority.low,

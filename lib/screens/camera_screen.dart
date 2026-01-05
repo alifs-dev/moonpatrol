@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:moonpatrol/features/camera/zoomable_camera_preview.dart';
 import 'package:moonpatrol/models/sensor_data.dart';
+import 'package:moonpatrol/screens/responsive_scaffold.dart';
 import 'package:moonpatrol/services/camera_service.dart';
 import 'package:moonpatrol/services/dot.env_service.dart';
 import 'package:moonpatrol/services/elevation_service.dart';
@@ -13,6 +14,7 @@ import 'package:moonpatrol/services/location_service.dart';
 import 'package:moonpatrol/services/storage_service.dart';
 import 'package:moonpatrol/services/permission_service.dart';
 import 'package:moonpatrol/utils/logger/debug_log.dart';
+import 'package:moonpatrol/widgets/crosshair_widget.dart';
 import 'package:moonpatrol/widgets/sensor_overlay_widget.dart';
 import 'package:moonpatrol/widgets/camera_button_widget.dart';
 
@@ -193,32 +195,34 @@ class _CameraScreenState extends State<CameraScreen> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Prévisualisation caméra
-          // CameraPreview(_cameraService.controller!),
-          ZoomableCameraPreview(
-            controller: _cameraService.controller!,
-            onZoomChanged: (zoom) {
-              setState(() => _zoomLevel = zoom);
-              _cameraService.setZoomLevel(zoom);
-            },
-          ),
-          // Overlay avec les données des capteurs
-          SensorOverlayWidget(
-            position: _currentPosition,
-            elevationApi: _currentElevationApi,
-            accelerometer: _sensorService.accelerometer,
-            gyroscope: _sensorService.gyroscope,
-            magnetometer: _sensorService.magnetometer,
-            batteryLevel: _sensorService.batteryLevel,
-            zoomLevel: _zoomLevel,
-          ),
-
-          CameraButtonWidget(isCapturing: _isCapturing, onPressed: _takePicture),
-        ],
+    return ResponsiveScaffold(
+      child: Scaffold(
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Prévisualisation caméra
+            // CameraPreview(_cameraService.controller!),
+            ZoomableCameraPreview(
+              controller: _cameraService.controller!,
+              onZoomChanged: (zoom) {
+                setState(() => _zoomLevel = zoom);
+                _cameraService.setZoomLevel(zoom);
+              },
+            ),
+            // Overlay avec les données des capteurs
+            SensorOverlayWidget(
+              position: _currentPosition,
+              elevationApi: _currentElevationApi,
+              accelerometer: _sensorService.accelerometer,
+              gyroscope: _sensorService.gyroscope,
+              magnetometer: _sensorService.magnetometer,
+              batteryLevel: _sensorService.batteryLevel,
+              zoomLevel: _zoomLevel,
+            ),
+            MinimalCrosshair(),
+            CameraButtonWidget(isCapturing: _isCapturing, onPressed: _takePicture),
+          ],
+        ),
       ),
     );
   }
