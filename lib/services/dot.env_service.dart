@@ -4,9 +4,8 @@ import 'package:moonpatrol/utils/logger/debug_log.dart';
 /// Service de configuration depuis .env
 class EnvConfig {
   // API URLs
-  static String get apiBaseUrl => dotenv.env['API_BASE_URL'] ?? 'http://localhost:8000';
-  static String get apiForensicEndpoint =>
-      dotenv.env['API_FORENSIC_ENDPOINT'] ?? '/api/forensic';
+  static String get apiBaseUrl => dotenv.env['API_BASE_URL'] ?? '';
+  static String get apiForensicEndpoint => dotenv.env['API_FORENSIC_ENDPOINT'] ?? '';
   static String get apiForensicUrl => '$apiBaseUrl$apiForensicEndpoint';
 
   static double get zoomLevel {
@@ -26,7 +25,8 @@ class EnvConfig {
 
   // Elevation API
   static String get elevationApiUrl =>
-      dotenv.env['ELEVATION_API_URL'] ?? 'https://api.open-elevation.com/api/v1/lookup';
+      dotenv.env['ELEVATION_API_URL'] ??
+      'https://api.open-elevation.com/api/v1/lookup?locations=%s,%s';
 
   static int get apiElevationDuration =>
       int.tryParse(dotenv.env['UPDATE_ELEVATION_API_DURATION']!) ?? 30;
@@ -38,8 +38,7 @@ class EnvConfig {
   static String get appVersion => dotenv.env['APP_VERSION'] ?? '1.0.0';
 
   // Debug
-  static bool get debugMode => dotenv.env['DEBUG_MODE']?.toLowerCase() == 'true';
-  static bool get enableLogs => dotenv.env['ENABLE_LOGS']?.toLowerCase() == 'true';
+  static bool get enableLogs => dotenv.env['ENABLE_LOGS']?.toLowerCase() == 'false';
 
   /// Initialiser la configuration
   static Future<void> initialize() async {
@@ -48,13 +47,10 @@ class EnvConfig {
 
   /// Afficher la configuration (debug)
   static void printConfig() {
-    if (!debugMode) return;
-
     DebugLog.info('🔧 Configuration ${EnvConfig.appName}:');
     DebugLog.info('  API URL: $apiForensicUrl');
     DebugLog.info('  Elevation API: $elevationApiUrl');
     DebugLog.info('  App: $appName v$appVersion');
-    DebugLog.info('  Debug: $debugMode');
     DebugLog.info('  Logs: $enableLogs');
   }
 }

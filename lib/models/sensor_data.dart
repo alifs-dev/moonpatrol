@@ -1,6 +1,24 @@
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:geolocator/geolocator.dart';
 
+class DeviceInfo {
+  final String model;
+  final String manufacturer;
+  final String version;
+
+  const DeviceInfo({
+    required this.model,
+    required this.manufacturer,
+    required this.version,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'model': model,
+    'manufacturer': manufacturer,
+    'version': version,
+  };
+}
+
 /// Modèle pour stocker toutes les données des capteurs
 class SensorData {
   final DateTime timestamp;
@@ -10,7 +28,7 @@ class SensorData {
   final GyroscopeEvent? gyroscope;
   final MagnetometerEvent? magnetometer;
   final int? batteryLevel;
-  final String? deviceInfo;
+  final DeviceInfo? deviceInfo;
   final double zoomLevel;
 
   SensorData({
@@ -68,7 +86,9 @@ BATTERIE:
   Niveau: ${batteryLevel ?? 'N/A'}%
 
 APPAREIL:
-$deviceInfo
+${deviceInfo?.model} 
+${deviceInfo?.manufacturer} 
+${deviceInfo?.version} 
 ========================
 ''';
   }
@@ -80,6 +100,9 @@ Accelerometre: ${accelerometer != null ? 'X:${accelerometer!.x.toStringAsFixed(2
 Gyroscope: ${gyroscope != null ? 'X:${gyroscope!.x.toStringAsFixed(2)} Y:${gyroscope!.y.toStringAsFixed(2)} Z:${gyroscope!.z.toStringAsFixed(2)}' : 'N/A'}
 Magnetometre: ${magnetometer != null ? 'X:${magnetometer!.x.toStringAsFixed(0)} Y:${magnetometer!.y.toStringAsFixed(0)} Z:${magnetometer!.z.toStringAsFixed(0)}' : 'N/A'}
 Batterie: ${batteryLevel ?? 'N/A'}%
-${deviceInfo ?? ''}''';
+Model: ${deviceInfo?.model}
+Manufacturer: ${deviceInfo?.manufacturer}
+Version: ${deviceInfo?.version}
+''';
   }
 }

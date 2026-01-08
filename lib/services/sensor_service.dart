@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:moonpatrol/models/sensor_data.dart';
 import 'package:moonpatrol/utils/logger/debug_log.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:battery_plus/battery_plus.dart';
@@ -12,7 +13,7 @@ class SensorService {
   GyroscopeEvent? _gyroscope;
   MagnetometerEvent? _magnetometer;
   int? _batteryLevel;
-  String? _deviceInfo;
+  late DeviceInfo? _deviceInfo;
 
   // Subscriptions
   StreamSubscription<AccelerometerEvent>? _accelSubscription;
@@ -24,7 +25,7 @@ class SensorService {
   GyroscopeEvent? get gyroscope => _gyroscope;
   MagnetometerEvent? get magnetometer => _magnetometer;
   int? get batteryLevel => _batteryLevel;
-  String? get deviceInfo => _deviceInfo;
+  DeviceInfo? get deviceInfo => _deviceInfo;
 
   /// Initialiser tous les capteurs
   void initializeSensors(Function() onUpdate) {
@@ -67,14 +68,18 @@ class SensorService {
       final deviceInfo = DeviceInfoPlugin();
       if (Platform.isAndroid) {
         final androidInfo = await deviceInfo.androidInfo;
-        _deviceInfo = '''Modele: ${androidInfo.model}
-  Fabricant: ${androidInfo.manufacturer}
-  Android: ${androidInfo.version.release}''';
+        _deviceInfo = DeviceInfo(
+          model: androidInfo.model,
+          manufacturer: androidInfo.manufacturer,
+          version: androidInfo.version.release,
+        );
       } else if (Platform.isIOS) {
         final iosInfo = await deviceInfo.iosInfo;
-        _deviceInfo = '''Modele: ${iosInfo.model}
-  Nom: ${iosInfo.name}
-  iOS: ${iosInfo.systemVersion}''';
+        _deviceInfo = DeviceInfo(
+          model: iosInfo.model,
+          manufacturer: iosInfo.name,
+          version: iosInfo.systemVersion,
+        );
       }
     } catch (e) {
       DebugLog.error('Erreur device info: $e');
