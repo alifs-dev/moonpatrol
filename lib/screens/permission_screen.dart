@@ -71,113 +71,107 @@ class _PermissionScreenState extends State<PermissionScreen> {
     final allGranted = _cameraGranted && _locationGranted && _storageGranted;
 
     return ResponsiveScaffold(
-      child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Logo/Icône
-              const Icon(Icons.camera_alt_rounded, size: 100, color: Colors.blue),
-              const SizedBox(height: 30),
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Titre
+            const Text(
+              'Autorisations requises',
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
 
-              // Titre
-              const Text(
-                'Autorisations requises',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
+            // Description
+            Text(
+              '${EnvConfig.appName} a besoin de ces autorisations pour fonctionner correctement :',
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+              textAlign: TextAlign.left,
+            ),
+            const SizedBox(height: 40),
+
+            // Liste des permissions
+            if (_isChecking)
+              const CircularProgressIndicator()
+            else ...[
+              _buildPermissionTile(
+                icon: Icons.camera_alt,
+                title: 'Caméra',
+                description: 'Pour prendre des photos',
+                granted: _cameraGranted,
               ),
               const SizedBox(height: 16),
-
-              // Description
-              Text(
-                '${EnvConfig.appName} a besoin de ces autorisations pour fonctionner correctement :',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-                textAlign: TextAlign.center,
+              _buildPermissionTile(
+                icon: Icons.location_on,
+                title: 'Localisation',
+                description: 'Pour enregistrer les coordonnées GPS',
+                granted: _locationGranted,
               ),
-              const SizedBox(height: 40),
-
-              // Liste des permissions
-              if (_isChecking)
-                const CircularProgressIndicator()
-              else ...[
-                _buildPermissionTile(
-                  icon: Icons.camera_alt,
-                  title: 'Caméra',
-                  description: 'Pour prendre des photos',
-                  granted: _cameraGranted,
-                ),
-                const SizedBox(height: 16),
-                _buildPermissionTile(
-                  icon: Icons.location_on,
-                  title: 'Localisation',
-                  description: 'Pour enregistrer les coordonnées GPS',
-                  granted: _locationGranted,
-                ),
-                const SizedBox(height: 16),
-                _buildPermissionTile(
-                  icon: Icons.folder,
-                  title: 'Stockage',
-                  description: 'Pour sauvegarder les photos',
-                  granted: _storageGranted,
-                ),
-              ],
-
-              const Spacer(),
-
-              // Boutons d'action
-              if (!allGranted) ...[
-                SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: _isChecking ? null : _requestPermissions,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      'Autoriser',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                TextButton(
-                  onPressed: _openSettings,
-                  child: const Text('Ouvrir les paramètres'),
-                ),
-              ] else
-                SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: ElevatedButton.icon(
-                    onPressed: _navigateToCamera,
-                    icon: const Icon(Icons.check_circle, color: Colors.white),
-                    label: const Text(
-                      'Continuer',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                ),
+              const SizedBox(height: 16),
+              _buildPermissionTile(
+                icon: Icons.folder,
+                title: 'Stockage',
+                description: 'Pour sauvegarder les photos',
+                granted: _storageGranted,
+              ),
             ],
-          ),
+
+            const Spacer(),
+
+            // Boutons d'action
+            if (!allGranted) ...[
+              SizedBox(
+                width: double.infinity,
+                // height: 56,
+                child: ElevatedButton(
+                  onPressed: _isChecking ? null : _requestPermissions,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    'Autoriser',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: _openSettings,
+                child: const Text('Ouvrir les paramètres'),
+              ),
+            ] else
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton.icon(
+                  onPressed: _navigateToCamera,
+                  icon: const Icon(Icons.check_circle, color: Colors.white),
+                  label: const Text(
+                    'Continuer',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );

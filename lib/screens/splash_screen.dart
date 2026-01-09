@@ -68,82 +68,70 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return ResponsiveScaffold(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.black, Colors.blue.shade900, Colors.purple.shade900],
-            ),
-          ),
-          child: Center(
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: ScaleTransition(
-                scale: _scaleAnimation,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Icône de la lune avec effet de brillance
-                    Container(
-                      width: 150,
-                      height: 150,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white.withValues(alpha: 0.1),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.blue.withValues(alpha: 0.5),
-                            blurRadius: 30,
-                            spreadRadius: 10,
-                          ),
-                        ],
+      child: Center(
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: ScaleTransition(
+            scale: _scaleAnimation,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Icône de la lune avec effet de brillance
+                Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withValues(alpha: 0.1),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blue.withValues(alpha: 0.5),
+                        blurRadius: 30,
+                        spreadRadius: 10,
                       ),
-                      child: const Icon(
-                        Icons.nightlight_round,
-                        size: 80,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-
-                    // Titre
-                    Text(
-                      EnvConfig.appName,
-                      style: TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 2,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-
-                    // Sous-titre
-                    Text(
-                      'Capture. Mesure. Explore.',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white.withValues(alpha: 0.8),
-                        letterSpacing: 1,
-                      ),
-                    ),
-                    const SizedBox(height: 50),
-
-                    // Indicateur de chargement
-                    SizedBox(
-                      width: 40,
-                      height: 40,
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue.shade300),
-                        strokeWidth: 3,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.nightlight_round,
+                    size: 80,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
+                const SizedBox(height: 30),
+
+                // Titre
+                Text(
+                  EnvConfig.appName,
+                  style: TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    letterSpacing: 2,
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                // Sous-titre
+                Text(
+                  'Capture. Mesure. Explore.',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white.withValues(alpha: 0.8),
+                    letterSpacing: 1,
+                  ),
+                ),
+                const SizedBox(height: 50),
+
+                // Indicateur de chargement
+                SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue.shade300),
+                    strokeWidth: 3,
+                  ),
+                ),
+              ],
             ),
           ),
         ),

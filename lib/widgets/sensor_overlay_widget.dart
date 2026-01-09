@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:moonpatrol/models/orientation_data.dart';
+import 'package:moonpatrol/utils/logger/debug_log.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 /// Widget affichant les données des capteurs en overlay
@@ -11,6 +13,8 @@ class SensorOverlayWidget extends StatelessWidget {
   final MagnetometerEvent? magnetometer;
   final int? batteryLevel;
   final double? zoomLevel;
+  final OrientationData? orientation;
+  final double? zoom;
 
   const SensorOverlayWidget({
     super.key,
@@ -21,6 +25,8 @@ class SensorOverlayWidget extends StatelessWidget {
     this.magnetometer,
     this.batteryLevel,
     this.zoomLevel,
+    this.orientation,
+    this.zoom,
   });
 
   String _formatAltitude() {
@@ -114,7 +120,25 @@ class SensorOverlayWidget extends StatelessWidget {
                   : 'N/A',
             ),
             _buildSensorRow('Zoom.', zoomLevel!.toStringAsFixed(3)),
-            _buildSensorRow('Batt.', batteryLevel != null ? '$batteryLevel%' : 'N/A'),
+            _buildSensorRow(
+              'Pitch:',
+              orientation != null ? '${orientation!.pitch.toStringAsFixed(1)}°' : 'N/A',
+            ),
+            _buildSensorRow(
+              'Roll:',
+              orientation != null ? '${orientation!.roll.toStringAsFixed(1)}°' : 'N/A',
+            ),
+            _buildSensorRow(
+              'Azimut:',
+              orientation != null ? '${orientation!.yaw.toStringAsFixed(1)}°' : 'N/A',
+            ),
+            _buildSensorRow(
+              'Altitude:',
+              orientation != null
+                  ? '${orientation!.altitude.toStringAsFixed(1)}°'
+                  : 'N/A',
+            ),
+            if (zoom != null) _buildSensorRow('Zoom', 'x${zoom!.toStringAsFixed(1)}'),
           ],
         ),
       ),
@@ -123,7 +147,7 @@ class SensorOverlayWidget extends StatelessWidget {
 
   Widget _buildSensorRow(String label, String value, {Color color = Colors.white}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
+      padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
         children: [
           SizedBox(
