@@ -13,114 +13,107 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ResponsiveScaffold(
-      hasGradient: true,
-      child: Scaffold(
-        body: Column(
-          children: [
-            // En-tête
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Row(
+      child: Column(
+        children: [
+          // En-tête
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                const Icon(Icons.nightlight_round, color: Colors.white, size: 32),
+                // const SizedBox(width: 10),
+                Text(
+                  EnvConfig.appName,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Contenu principal
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.nightlight_round, color: Colors.white, size: 32),
-                  const SizedBox(width: 10),
-                  Text(
-                    EnvConfig.appName,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                  // Carte de présentation
+                  _buildFeatureCard(
+                    icon: Icons.camera_alt,
+                    title: 'Capture Intelligente',
+                    description: 'Photos haute qualité avec métadonnées GPS et capteurs',
+                    color: Colors.blue,
+                  ),
+                  const SizedBox(height: 20),
+                  _buildFeatureCard(
+                    icon: Icons.sensors,
+                    title: 'Données en Temps Réel',
+                    description: 'Accéléromètre, gyroscope, magnétomètre et plus',
+                    color: Colors.purple,
+                  ),
+                  const SizedBox(height: 20),
+                  _buildFeatureCard(
+                    icon: Icons.location_on,
+                    title: 'Géolocalisation',
+                    description: 'GPS précis avec altitude, vitesse et cap',
+                    color: Colors.teal,
+                  ),
+                  const SizedBox(height: 40),
+
+                  // Bouton principal
+                  SizedBox(
+                    width: double.infinity,
+                    height: 60,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Navigation vers CameraScreen
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CameraScreen(cameras: cameras),
+                          ),
+                        );
+                      },
+
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        elevation: 5,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Icon(Icons.camera_alt, size: 28),
+                          SizedBox(width: 10),
+                          Text(
+                            'Commencer',
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
+          ),
 
-            // Contenu principal
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Carte de présentation
-                    _buildFeatureCard(
-                      icon: Icons.camera_alt,
-                      title: 'Capture Intelligente',
-                      description:
-                          'Photos haute qualité avec métadonnées GPS et capteurs',
-                      color: Colors.blue,
-                    ),
-                    const SizedBox(height: 20),
-                    _buildFeatureCard(
-                      icon: Icons.sensors,
-                      title: 'Données en Temps Réel',
-                      description: 'Accéléromètre, gyroscope, magnétomètre et plus',
-                      color: Colors.purple,
-                    ),
-                    const SizedBox(height: 20),
-                    _buildFeatureCard(
-                      icon: Icons.location_on,
-                      title: 'Géolocalisation',
-                      description: 'GPS précis avec altitude, vitesse et cap',
-                      color: Colors.teal,
-                    ),
-                    const SizedBox(height: 40),
-
-                    // Bouton principal
-                    SizedBox(
-                      width: double.infinity,
-                      height: 60,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Navigation vers CameraScreen
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CameraScreen(cameras: cameras),
-                            ),
-                          );
-                        },
-
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.camera_alt, size: 28),
-                            SizedBox(width: 10),
-                            Text(
-                              'Commencer',
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+          // Footer
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Text(
+              'Version ${EnvConfig.appVersion}',
+              style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 12),
             ),
-
-            // Footer
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Text(
-                'Version ${EnvConfig.appVersion}',
-                style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.5),
-                  fontSize: 12,
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

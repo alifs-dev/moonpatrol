@@ -37,28 +37,28 @@ class ElevationService {
   }
 
   /// Alternative : Batch request pour plusieurs points (économise les appels)
-  Future<List> getElevations(List<Map<String, double>> locations) async {
-    try {
-      // Format: lat1,lon1|lat2,lon2|lat3,lon3
-      final locationsStr = locations
-          .map((loc) => '${loc['lat']},${loc['lon']}')
-          .join('|');
+  // Future<List> getElevations(List<Map<String, double>> locations) async {
+  //   try {
+  //     // Format: lat1,lon1|lat2,lon2|lat3,lon3
+  //     final locationsStr = locations
+  //         .map((loc) => '${loc['lat']},${loc['lon']}')
+  //         .join('|');
 
-      final url = Uri.parse('$_baseUrl?locations=$locationsStr');
+  //     final url = Uri.parse('$_baseUrl?locations=$locationsStr');
 
-      final response = await http.get(url).timeout(const Duration(seconds: 15));
+  //     final response = await http.get(url).timeout(const Duration(seconds: 15));
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final results = data['results'] as List;
+  //     if (response.statusCode == 200) {
+  //       final data = jsonDecode(response.body);
+  //       final results = data['results'] as List;
 
-        return results.map((r) => r['elevation']?.toDouble()).toList();
-      }
+  //       return results.map((r) => r['elevation']?.toDouble()).toList();
+  //     }
 
-      return List.filled(locations.length, null);
-    } catch (e) {
-      DebugLog.error('Erreur batch altitude: $e');
-      return List.filled(locations.length, null);
-    }
-  }
+  //     return List.filled(locations.length, null);
+  //   } catch (e) {
+  //     DebugLog.error('Erreur batch altitude: $e');
+  //     return List.filled(locations.length, null);
+  //   }
+  // }
 }

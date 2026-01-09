@@ -13,8 +13,17 @@ class CameraService {
 
   double get currentZoomLevel => _currentZoomLevel;
 
+  double _currentZoom = 1.0;
+  double get currentZoom => _currentZoom;
+
   void setZoomLevel(double zoom) {
     _currentZoomLevel = zoom;
+  }
+
+  Future<void> setZoom(double zoom) async {
+    if (_controller == null) return;
+    _currentZoom = zoom;
+    await _controller!.setZoomLevel(zoom);
   }
 
   /// Initialiser la caméra

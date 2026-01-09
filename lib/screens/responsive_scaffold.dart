@@ -12,7 +12,7 @@ class ResponsiveScaffold extends StatelessWidget {
     super.key,
     required this.child,
     this.backgroundColor,
-    this.hasGradient = true,
+    this.hasGradient = false,
     this.gradientColors,
     this.appBar,
   });
@@ -23,6 +23,7 @@ class ResponsiveScaffold extends StatelessWidget {
     final padding = MediaQuery.of(context).padding;
 
     return Scaffold(
+      backgroundColor: backgroundColor ?? Colors.blue.shade900,
       resizeToAvoidBottomInset: false,
       appBar: appBar,
       body: SafeArea(

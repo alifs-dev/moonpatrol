@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:moonpatrol/models/sensor_data.dart';
+import 'package:moonpatrol/models/device_info_data.dart';
 import 'package:moonpatrol/utils/logger/debug_log.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:moonpatrol/services/orientation_service.dart';
+import 'package:moonpatrol/models/orientation_data.dart';
 
 /// Service de gestion des capteurs
 class SensorService {
@@ -13,7 +15,7 @@ class SensorService {
   GyroscopeEvent? _gyroscope;
   MagnetometerEvent? _magnetometer;
   int? _batteryLevel;
-  late DeviceInfo? _deviceInfo;
+  DeviceInfo? _deviceInfo;
 
   // Subscriptions
   StreamSubscription<AccelerometerEvent>? _accelSubscription;
@@ -26,6 +28,19 @@ class SensorService {
   MagnetometerEvent? get magnetometer => _magnetometer;
   int? get batteryLevel => _batteryLevel;
   DeviceInfo? get deviceInfo => _deviceInfo;
+
+  final OrientationService _orientationService = OrientationService();
+
+  OrientationData? get orientation {
+    if (_accelerometer != null && _gyroscope != null && _magnetometer != null) {
+      return _orientationService.compute(
+        accel: _accelerometer!,
+        gyro: _gyroscope!,
+        mag: _magnetometer!,
+      );
+    }
+    return null;
+  }
 
   /// Initialiser tous les capteurs
   void initializeSensors(Function() onUpdate) {
@@ -67,18 +82,18 @@ class SensorService {
     try {
       final deviceInfo = DeviceInfoPlugin();
       if (Platform.isAndroid) {
-        final androidInfo = await deviceInfo.androidInfo;
+        final info = await deviceInfo.androidInfo;
         _deviceInfo = DeviceInfo(
-          model: androidInfo.model,
-          manufacturer: androidInfo.manufacturer,
-          version: androidInfo.version.release,
+          model: info.model,
+          manufacturer: info.manufacturer,
+          version: info.version.release,
         );
       } else if (Platform.isIOS) {
-        final iosInfo = await deviceInfo.iosInfo;
+        final info = await deviceInfo.iosInfo;
         _deviceInfo = DeviceInfo(
-          model: iosInfo.model,
-          manufacturer: iosInfo.name,
-          version: iosInfo.systemVersion,
+          model: info.model,
+          manufacturer: info.name,
+          version: info.systemVersion,
         );
       }
     } catch (e) {

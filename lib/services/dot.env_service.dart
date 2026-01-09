@@ -47,10 +47,10 @@ class EnvConfig {
 
   /// Afficher la configuration (debug)
   static void printConfig() {
-    DebugLog.info('🔧 Configuration ${EnvConfig.appName}:');
-    DebugLog.info('  API URL: $apiForensicUrl');
-    DebugLog.info('  Elevation API: $elevationApiUrl');
-    DebugLog.info('  App: $appName v$appVersion');
-    DebugLog.info('  Logs: $enableLogs');
+    DebugLog.info('Configuration ${EnvConfig.appName}:');
+    DebugLog.info('API URL: $apiForensicUrl');
+    DebugLog.info('Elevation API: $elevationApiUrl');
+    DebugLog.info('App: $appName v$appVersion');
+    DebugLog.info('Logs: $enableLogs');
   }
 }

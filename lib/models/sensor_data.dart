@@ -1,23 +1,7 @@
+import 'package:moonpatrol/models/device_info_data.dart';
+import 'package:moonpatrol/models/orientation_data.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:geolocator/geolocator.dart';
-
-class DeviceInfo {
-  final String model;
-  final String manufacturer;
-  final String version;
-
-  const DeviceInfo({
-    required this.model,
-    required this.manufacturer,
-    required this.version,
-  });
-
-  Map<String, dynamic> toJson() => {
-    'model': model,
-    'manufacturer': manufacturer,
-    'version': version,
-  };
-}
 
 /// Modèle pour stocker toutes les données des capteurs
 class SensorData {
@@ -29,7 +13,8 @@ class SensorData {
   final MagnetometerEvent? magnetometer;
   final int? batteryLevel;
   final DeviceInfo? deviceInfo;
-  final double zoomLevel;
+  final double? zoomLevel;
+  final OrientationData? orientation;
 
   SensorData({
     required this.timestamp,
@@ -40,7 +25,8 @@ class SensorData {
     this.magnetometer,
     this.batteryLevel,
     this.deviceInfo,
-    required this.zoomLevel,
+    this.zoomLevel,
+    this.orientation,
   });
 
   /// Convertir les données en format texte lisible

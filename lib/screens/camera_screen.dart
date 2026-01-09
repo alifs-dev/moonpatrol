@@ -134,6 +134,7 @@ class _CameraScreenState extends State<CameraScreen> {
         batteryLevel: _sensorService.batteryLevel,
         deviceInfo: _sensorService.deviceInfo,
         zoomLevel: _cameraService.currentZoomLevel,
+        orientation: _sensorService.orientation,
       );
 
       // Sauvegarder
@@ -196,33 +197,32 @@ class _CameraScreenState extends State<CameraScreen> {
     }
 
     return ResponsiveScaffold(
-      child: Scaffold(
-        body: Stack(
-          fit: StackFit.expand,
-          children: [
-            // Prévisualisation caméra
-            // CameraPreview(_cameraService.controller!),
-            ZoomableCameraPreview(
-              controller: _cameraService.controller!,
-              onZoomChanged: (zoom) {
-                setState(() => _zoomLevel = zoom);
-                _cameraService.setZoomLevel(zoom);
-              },
-            ),
-            // Overlay avec les données des capteurs
-            SensorOverlayWidget(
-              position: _currentPosition,
-              elevationApi: _currentElevationApi,
-              accelerometer: _sensorService.accelerometer,
-              gyroscope: _sensorService.gyroscope,
-              magnetometer: _sensorService.magnetometer,
-              batteryLevel: _sensorService.batteryLevel,
-              zoomLevel: _zoomLevel,
-            ),
-            MinimalCrosshair(),
-            CameraButtonWidget(isCapturing: _isCapturing, onPressed: _takePicture),
-          ],
-        ),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Prévisualisation caméra
+          // CameraPreview(_cameraService.controller!),
+          ZoomableCameraPreview(
+            controller: _cameraService.controller!,
+            onZoomChanged: (zoom) {
+              setState(() => _zoomLevel = zoom);
+              _cameraService.setZoomLevel(zoom);
+            },
+          ),
+          // Overlay avec les données des capteurs
+          SensorOverlayWidget(
+            position: _currentPosition,
+            elevationApi: _currentElevationApi,
+            accelerometer: _sensorService.accelerometer,
+            gyroscope: _sensorService.gyroscope,
+            magnetometer: _sensorService.magnetometer,
+            batteryLevel: _sensorService.batteryLevel,
+            zoomLevel: _zoomLevel,
+            orientation: _sensorService.orientation,
+          ),
+          MinimalCrosshair(),
+          CameraButtonWidget(isCapturing: _isCapturing, onPressed: _takePicture),
+        ],
       ),
     );
   }
