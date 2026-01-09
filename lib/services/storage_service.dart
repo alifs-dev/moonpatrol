@@ -195,6 +195,14 @@ class StorageService {
                     }
                     : null,
           },
+          'orientation':
+              data.orientation != null
+                  ? {
+                    'roll': data.orientation!.roll,
+                    'pitch': data.orientation!.pitch,
+                    'yaw': data.orientation!.yaw,
+                  }
+                  : null,
           'battery': {'level': data.batteryLevel, 'unit': '%'},
           'device': data.deviceInfo,
         },
