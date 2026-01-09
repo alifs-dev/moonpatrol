@@ -59,6 +59,7 @@ dependencies:
 
   flutter_local_notifications: ^17.2.3
   sprintf: ^7.0.0
+  flutter_launcher_icons: ^0.14.4
   
 dev_dependencies:
   flutter_test:
