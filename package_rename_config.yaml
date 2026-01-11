@@ -18,7 +18,7 @@ package_rename_config:
   macos:
     app_name: "Moon Patrol" # Product name
     package_name: "dz.alifsdev.moonpatrol" # Product Bundle Identifier
-    copyright_notice: "Copyright © 2026" # Copyright notice
+    copyright_notice: "Copyright © 2026 alifsdev" # Copyright notice
 
   web:
     app_name: "Moon Patrol" # App title & PWA name

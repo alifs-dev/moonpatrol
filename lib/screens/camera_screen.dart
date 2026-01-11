@@ -197,32 +197,34 @@ class _CameraScreenState extends State<CameraScreen> {
     }
 
     return ResponsiveScaffold(
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Prévisualisation caméra
-          // CameraPreview(_cameraService.controller!),
-          ZoomableCameraPreview(
-            controller: _cameraService.controller!,
-            onZoomChanged: (zoom) {
-              setState(() => _zoomLevel = zoom);
-              _cameraService.setZoomLevel(zoom);
-            },
-          ),
-          // Overlay avec les données des capteurs
-          SensorOverlayWidget(
-            position: _currentPosition,
-            elevationApi: _currentElevationApi,
-            accelerometer: _sensorService.accelerometer,
-            gyroscope: _sensorService.gyroscope,
-            magnetometer: _sensorService.magnetometer,
-            batteryLevel: _sensorService.batteryLevel,
-            zoomLevel: _zoomLevel,
-            orientation: _sensorService.orientation,
-          ),
-          MinimalCrosshair(),
-          CameraButtonWidget(isCapturing: _isCapturing, onPressed: _takePicture),
-        ],
+      child: Scaffold(
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Prévisualisation caméra
+            // CameraPreview(_cameraService.controller!),
+            ZoomableCameraPreview(
+              controller: _cameraService.controller!,
+              onZoomChanged: (zoom) {
+                setState(() => _zoomLevel = zoom);
+                _cameraService.setZoomLevel(zoom);
+              },
+            ),
+            // Overlay avec les données des capteurs
+            SensorOverlayWidget(
+              position: _currentPosition,
+              elevationApi: _currentElevationApi,
+              accelerometer: _sensorService.accelerometer,
+              gyroscope: _sensorService.gyroscope,
+              magnetometer: _sensorService.magnetometer,
+              batteryLevel: _sensorService.batteryLevel,
+              zoomLevel: _zoomLevel,
+              orientation: _sensorService.orientation,
+            ),
+            MinimalCrosshair(),
+            CameraButtonWidget(isCapturing: _isCapturing, onPressed: _takePicture),
+          ],
+        ),
       ),
     );
   }
