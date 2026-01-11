@@ -37,9 +37,6 @@ class EnvConfig {
   static String get appName => dotenv.env['APP_NAME'] ?? 'Moon Patrol';
   static String get appVersion => dotenv.env['APP_VERSION'] ?? '1.0.0';
 
-  // Debug
-  static bool get enableLogs => dotenv.env['ENABLE_LOGS']?.toLowerCase() == 'false';
-
   /// Initialiser la configuration
   static Future<void> initialize() async {
     await dotenv.load(fileName: '.env');
@@ -51,6 +48,5 @@ class EnvConfig {
     DebugLog.info('API URL: $apiForensicUrl');
     DebugLog.info('Elevation API: $elevationApiUrl');
     DebugLog.info('App: $appName v$appVersion');
-    DebugLog.info('Logs: $enableLogs');
   }
 }

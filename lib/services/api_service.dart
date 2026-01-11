@@ -74,6 +74,14 @@ class ApiService {
                   }
                   : null,
         },
+        'orientation':
+            sensorData.orientation != null
+                ? {
+                  'roll': sensorData.orientation!.roll,
+                  'pitch': sensorData.orientation!.pitch,
+                  'yaw': sensorData.orientation!.yaw,
+                }
+                : null,
         'device': {
           'battery_level': sensorData.batteryLevel,
           'info': sensorData.deviceInfo,
@@ -119,6 +127,7 @@ class ApiService {
       final response = await http.get(url).timeout(const Duration(seconds: 5));
 
       DebugLog.info('Test connexion API: ${response.statusCode}');
+
       return response.statusCode < 500;
     } catch (e) {
       DebugLog.error('API non accessible: $e');

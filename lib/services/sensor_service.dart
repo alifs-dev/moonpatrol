@@ -14,8 +14,8 @@ class SensorService {
   AccelerometerEvent? _accelerometer;
   GyroscopeEvent? _gyroscope;
   MagnetometerEvent? _magnetometer;
-  int? _batteryLevel;
   DeviceInfo? _deviceInfo;
+  int? _batteryLevel;
 
   // Subscriptions
   StreamSubscription<AccelerometerEvent>? _accelSubscription;
