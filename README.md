@@ -2,6 +2,9 @@
 
 Application Flutter professionnelle qui capture des photos avec toutes les données des capteurs du smartphone (GPS, accéléromètre, gyroscope, magnétomètre, batterie).
 
+# Moon Patrol Viewer:
+https://github.com/alifs-dev/moonpatrol_editor
+
 ![Flutter](https://img.shields.io/badge/Flutter-3.0+-blue.svg)
 ![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS-green.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
@@ -29,28 +32,49 @@ Architecture professionnelle avec séparation des responsabilités :
 
 ```
 lib/
-├── main.dart                    # Point d'entrée
-├── models/
-│   └── sensor_data.dart        # Modèle de données
-├── services/
-│   ├── camera_service.dart     # Gestion caméra
-│   ├── sensor_service.dart     # Lecture capteurs
-│   ├── location_service.dart   # GPS
-│   ├── storage_service.dart    # Sauvegarde
-│   └── permission_service.dart # Permissions
-├── screens/
-│   └── camera_screen.dart      # Écran principal
-└── widgets/
-    ├── sensor_overlay_widget.dart   # Overlay capteurs
-    └── camera_button_widget.dart    # Bouton photo
+┣ features/
+┃ ┣ camera/
+┃ ┃ ┗ zoomable_camera_preview.dart
+┃ ┗ http/
+┃   ┗ localhost.dart
+┣ models/
+┃ ┣ device_info_data.dart
+┃ ┣ orientation_data.dart
+┃ ┗ sensor_data.dart
+┣ screens/
+┃ ┣ camera_screen.dart
+┃ ┣ home_screen.dart
+┃ ┣ permission_screen.dart
+┃ ┣ responsive_scaffold.dart
+┃ ┗ splash_screen.dart
+┣ services/
+┃ ┣ api_service.dart
+┃ ┣ camera_service.dart
+┃ ┣ dot.env_service.dart
+┃ ┣ elevation_service.dart
+┃ ┣ location_service.dart
+┃ ┣ notification_service.dart
+┃ ┣ orientation_service.dart
+┃ ┣ permission_service.dart
+┃ ┣ sensor_service.dart
+┃ ┗ storage_service.dart
+┣ utils/
+┃ ┗ logger/
+┃   ┗ debug_log.dart
+┣ widgets/
+┃ ┣ camera_button_widget.dart
+┃ ┣ crosshair_widget.dart
+┃ ┗ sensor_overlay_widget.dart
+┗ main.dart
+
 ```
 
 ## 🚀 Installation
 
 ### Prérequis
 
-- Flutter 3.0.0 ou supérieur
-- Dart 3.0.0 ou supérieur
+- Flutter 3.29.3 ou supérieur
+- Dart 3.7.2 ou supérieur
 - Android Studio / Xcode pour le développement
 - Un appareil physique (recommandé pour tester les capteurs)
 
