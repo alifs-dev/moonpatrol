@@ -16,7 +16,7 @@ class NotificationService {
   Future<void> initialize() async {
     if (_initialized) return;
 
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings('@mipmap/launcher_icon');
     const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -133,6 +133,7 @@ class NotificationService {
     var androidDetails = AndroidNotificationDetails(
       'moonpatrol_channel',
       EnvConfig.appName,
+      icon: '',
       channelDescription: 'Notifications de l\'application ${EnvConfig.appName}',
       importance: Importance.high,
       priority: Priority.high,

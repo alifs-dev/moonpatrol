@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "moonpatrol" "\0"
+            VALUE "CompanyName", "dz.alifsdev.moonpatrol" "\0"
+            VALUE "FileDescription", "Moon Patrol" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "moonpatrol" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "moonpatrol.exe" "\0"
-            VALUE "ProductName", "moonpatrol" "\0"
+            VALUE "InternalName", "Moon Patrol" "\0"
+            VALUE "LegalCopyright", "Copyright © 2026 alifsdev" "\0"
+            VALUE "OriginalFilename", "moon_patrol.exe" "\0"
+            VALUE "ProductName", "Moon Patrol" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

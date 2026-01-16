@@ -21,8 +21,8 @@ class ZoomableCameraPreview extends StatefulWidget {
 class _ZoomableCameraPreviewState extends State<ZoomableCameraPreview> {
   double _currentZoom = EnvConfig.zoomLevel;
   double _baseZoom = EnvConfig.zoomLevel;
-  double _minZoom = 0;
-  double _maxZoom = 10.0;
+  double _minZoom = 0.0;
+  double _maxZoom = 0.0;
 
   @override
   void initState() {

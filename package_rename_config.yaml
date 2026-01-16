@@ -1,0 +1,32 @@
+package_rename_config:
+  android:
+    app_name: "Moon Patrol" # Display name
+    package_name: "dz.alifsdev.moonpatrol" # Package name
+    override_old_package: "dz.alifsdev.moonpatrol" # Optional: Cleans up old folder structure
+    lang: "kotlin" # Optional: "kotlin" (default) or "java"
+
+  ios:
+    app_name: "Moon Patrol" # Display name
+    bundle_name: "Moon Patrol" # Bundle name
+    package_name: "dz.alifsdev.moonpatrol" # Product Bundle Identifier
+
+  linux:
+    app_name: "Moon Patrol" # Window title
+    package_name: "dz.alifsdev.moonpatrol" # Application ID
+    exe_name: "moon_patrol" # Executable name (binary)
+
+  macos:
+    app_name: "Moon Patrol" # Product name
+    package_name: "dz.alifsdev.moonpatrol" # Product Bundle Identifier
+    copyright_notice: "Copyright © 2026 alifsdev" # Copyright notice
+
+  web:
+    app_name: "Moon Patrol" # App title & PWA name
+    short_app_name: "Moon Patrol" # PWA short name (defaults to app_name)
+    description: "Take photo with all sensors data" # Web app description
+
+  windows:
+    app_name: "Moon Patrol" # Window title & Software name
+    organization: "dz.alifsdev.moonpatrol" # Organization/Company name
+    copyright_notice: "Copyright © 2026 alifsdev" # Legal copyright
+    exe_name: "moon_patrol" # Executable name (binary)

@@ -189,10 +189,10 @@ class MinimalCrosshair extends StatelessWidget {
     return const CrosshairWidget(
       color: Colors.white,
       size: 25.0,
-      strokeWidth: 1.0,
-      gapSize: 6.0,
+      strokeWidth: 2.0,
+      gapSize: 10.0,
       showCircle: false,
-      opacity: 0.6,
+      opacity: 1,
     );
   }
 }

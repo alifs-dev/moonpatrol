@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:moonpatrol/models/orientation_data.dart';
-import 'package:moonpatrol/utils/logger/debug_log.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 /// Widget affichant les données des capteurs en overlay

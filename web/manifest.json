@@ -1,11 +1,11 @@
 {
-    "name": "moonpatrol",
-    "short_name": "moonpatrol",
+    "name": "Moon Patrol",
+    "short_name": "Moon Patrol",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#hexcode",
     "theme_color": "#hexcode",
-    "description": "A new Flutter project.",
+    "description": "Take photo with all sensors data",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -13,7 +13,7 @@ class CameraService {
 
   double get currentZoomLevel => _currentZoomLevel;
 
-  double _currentZoom = 1.0;
+  double _currentZoom = EnvConfig.zoomLevel;
   double get currentZoom => _currentZoom;
 
   void setZoomLevel(double zoom) {

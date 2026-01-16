@@ -31,7 +31,7 @@
 
     <!-- usesCleartextTraffic="true" permet les connexions HTTP (localhost). Sinon Android bloque par défaut -->
     <application
-        android:label="MoonPatrol"
+        android:label="Moon Patrol"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
         android:requestLegacyExternalStorage="true"
