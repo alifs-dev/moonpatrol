@@ -35,7 +35,7 @@ class CameraService {
 
     _controller = CameraController(
       cameras.first,
-      ResolutionPreset.max,
+      ResolutionPreset.high,
       enableAudio: false,
     );
 
