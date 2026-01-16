@@ -49,3 +49,4 @@ app.*.map.json
 tools
 .env
 todo.txt
+SCREEN.md
