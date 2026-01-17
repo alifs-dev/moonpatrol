@@ -82,8 +82,13 @@ lib/
 
 1. **Cloner le repository**
 ```bash
-https://github.com/alifs-dev/moonpatrol.git
+git clone https://github.com/alifs-dev/moonpatrol.git
 cd moonpatrol
+```
+```
+Renommer le fichier .env.example en .env
+
+mv .env.example .env
 ```
 
 2. **Installer les dépendances**
